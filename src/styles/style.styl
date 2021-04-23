@@ -1,2 +1,40 @@
+charWidth(x)
+    x * (80 / 133.3) * 1em
+
+charHeight(x)
+    x * 1em
+
+html, body
+    margin: 0
+    padding: 0
+    box-sizing: border-box
+    overflow: hidden
+
+*
+    margin: 0
+    padding: 0
+
+.game
+    position: absolute
+    left: 10%
+    top: 10%
+    width: 80%
+    height: 80%
+    overflow: hidden
+    line-height: 1em
+    font-size: 1em
+    //user-select: none
+
+.background
+    position: absolute
+    left: 0
+    top: 0
+
+.wall
+    position: absolute
+    left: charWidth(8)
+    top: charHeight(8)
+    color: red
+
 pre
     font-family: FreeMono
