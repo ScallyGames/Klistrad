@@ -23,7 +23,7 @@ module.exports = {
                         loader: 'file-loader',
                         options:
                         {
-                            name: 'style.css',
+                            name: '[name].css',
                         },
                     },
                     {
@@ -35,6 +35,14 @@ module.exports = {
                     {
                         loader: 'stylus-loader',
                     },
+                ]
+            },
+            {
+                test: /\.ttf$/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                    }
                 ]
             },
         ],
