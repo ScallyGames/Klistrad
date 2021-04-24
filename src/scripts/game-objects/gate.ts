@@ -45,7 +45,6 @@ class Gate extends InteractableGameObject
     {
         super(key, labelPosition);
 
-        this.key = key;
         this.orientation = orientation;
 
         this.contentHtmlElement.innerHTML = templateClosed;
