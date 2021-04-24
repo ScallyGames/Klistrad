@@ -11,6 +11,11 @@ abstract class Utils
     {
         return (x * Constants.charHeight) + 'px';
     }
+
+    public static getMaxEnumValue(x : object) : number
+    {
+        return Math.max(...Object.keys(x).map(x => Number.parseInt(x)).filter(x => !isNaN(x)));
+    }
 }
 
 export { Utils };
