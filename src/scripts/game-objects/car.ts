@@ -7,17 +7,32 @@ const templateRight = require('../../templates/car-right.pug')();
 
 class Car extends GameObject
 {
-    waypoints : Vector2[] = [
-        { x: 90, y: -6 },
-        { x: 90, y: 10 },
-        { x: 90, y: 15 },
-        { x: 100, y: 15 },
-        { x: 100, y: 30 },
-        { x: 74, y: 30 },
-        { x: 74, y: 44 },
+    waypoints : (Vector2 | (()=>boolean)) [] = [
+        new Vector2(90, -6),
+        new Vector2(90, 2),
+        ()=>{
+            console.log("waiting for upper gate")
+            return false;
+        },
+        new Vector2(90, 6),
+        new Vector2(114, 6),
+        new Vector2(114, 15),
+        new Vector2(99, 15),
+        ()=>{
+            console.log("waiting for unloading")
+            return false;
+        },
+        new Vector2(99, 16),
+        new Vector2(114, 16),
+        new Vector2(114, 35),
+        new Vector2(74, 35),
+        new Vector2(74, 36),
+        ()=>{
+            console.log("waiting for lower gate")
+            return false;
+        },
+        new Vector2(74, 44)
     ];
-
-    eventListener = (e : KeyboardEvent) => this.handleKey(e);
 
     constructor()
     {
@@ -25,37 +40,12 @@ class Car extends GameObject
 
         this.htmlElement.innerHTML = templateRight;
         this.pivot = new Vector2(3, 0);
-        this.position = this.waypoints[0];
-        this.waypoints.shift();
-        this.moveDown();
-        this.update();
-
-        document.addEventListener("keydown", this.eventListener);
-    }
-
-    handleKey(e : KeyboardEvent) 
-    {
-        switch (e.key)
-        {
-            case 'ArrowLeft':
-                this.moveLeft();
-                break;
-            
-            case 'ArrowRight':
-                this.moveRight();
-                break;
-
-            case 'ArrowDown':
-                this.moveDown();
-                break;
-            
-            case 'ArrowUp':
-                this.moveUp();
-                break;
-
-            case ' ':
-                console.log(this.position);
-                break;
+        if(this.waypoints[0] instanceof Vector2) {
+            this.position = this.waypoints[0];
+            this.waypoints.shift();
+            this.moveDown();
+        } else {
+            this.waypoints[0]();
         }
         this.update();
     }
@@ -89,26 +79,32 @@ class Car extends GameObject
         if(this.waypoints.length > 0)
         {
             let nextWaypoint = this.waypoints[0];
-            if(this.position.x < nextWaypoint.x)
-            {
-                this.moveRight();
-            }
-            else if(this.position.x > nextWaypoint.x)
-            {
-                this.moveLeft();
-            }
-            else if(this.position.y < nextWaypoint.y)
-            {
-                this.moveDown();
-            }
-            else if(this.position.y > nextWaypoint.y)
-            {
-                this.moveUp();
-            }
+            if(nextWaypoint instanceof Vector2) {
+                if(this.position.x < nextWaypoint.x)
+                {
+                    this.moveRight();
+                }
+                else if(this.position.x > nextWaypoint.x)
+                {
+                    this.moveLeft();
+                }
+                else if(this.position.y < nextWaypoint.y)
+                {
+                    this.moveDown();
+                }
+                else if(this.position.y > nextWaypoint.y)
+                {
+                    this.moveUp();
+                }
+    
+                if(this.position.x === nextWaypoint.x && this.position.y === nextWaypoint.y)
+                {
+                    this.waypoints.shift();
+                }
+            } else {
+                if(nextWaypoint()) {
 
-            if(this.position.x === nextWaypoint.x && this.position.y === nextWaypoint.y)
-            {
-                this.waypoints.shift();
+                }
             }
         }
         else
@@ -121,7 +117,6 @@ class Car extends GameObject
 
     destroy()
     {
-        document.removeEventListener("keydown", this.eventListener);
         super.destroy();
     }
 }
