@@ -10,6 +10,13 @@ html(lang="en")
     #settings
       label Double tap speed:
       input#double-tap-speed(type="range" min="0.1" max="1" step="0.025")
+    #instructions
+      h2 How to play:
+      ul
+        li Activate the objects in your factory by pressing the key indicated by the label next to it.
+        li Some objects require to keep the objects pressed for some duration.
+        li You can double tap the indicated key to make it stick (stay pressed) until you press it again.
+        li For security reasons only one of the barriers on the outer wall may be open at a time.
     #game
       #size-template
       if(referenceGrid)
