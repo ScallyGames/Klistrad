@@ -81,7 +81,7 @@ class WaterTank extends GameObject {
         this.contentElement = this.htmlElement.getElementsByClassName('content')[0] as HTMLElement;
         this.contentElement.innerHTML = contentTemplates[FillState.Empty];
 
-        this.valveElement = this.htmlElement.getElementsByClassName('valve')[0] as HTMLElement;//99,12
+        this.valveElement = this.htmlElement.getElementsByClassName('valve')[0] as HTMLElement;
         this.valveElement.innerHTML = valveTemplates[0];
 
         for(let listener of this.listeners)

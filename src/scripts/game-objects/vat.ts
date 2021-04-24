@@ -24,7 +24,7 @@ class Vat extends GameObject {
     contentElement : HTMLElement;
     currentFillState : FillState = FillState.Low;
 
-    constructor(position : Vector2) {
+    constructor(position : Vector2) {//2 valves need to fill and water tank
         super();
     
         this.contentHtmlElement.innerHTML = template;
