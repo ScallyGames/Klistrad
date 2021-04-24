@@ -7,10 +7,11 @@ const templateRight = require('../../templates/car-right.pug')();
 
 class Car extends GameObject
 {
-    waypoints : (Vector2 | (()=>boolean)) [];
+    waypoints : (Vector2 | ((car : Car)=>boolean)) [];
     content : number;
+    fillRate : number = 10;
 
-    constructor(waypoints : (Vector2 | (()=>boolean)) [], content : number)
+    constructor(waypoints : (Vector2 | ((car : Car)=>boolean)) [], content : number)
     {
         super();
         this.waypoints = waypoints;
@@ -23,7 +24,7 @@ class Car extends GameObject
             this.waypoints.shift();
             this.moveDown();
         } else {
-            this.waypoints[0]();
+            this.waypoints[0](this);
         }
         this.update();
     }
@@ -80,7 +81,7 @@ class Car extends GameObject
                     this.waypoints.shift();
                 }
             } else {
-                if(nextWaypoint()) {
+                if(nextWaypoint(this)) {
                     this.waypoints.shift();
                 }
             }
