@@ -7,36 +7,14 @@ const templateRight = require('../../templates/car-right.pug')();
 
 class Car extends GameObject
 {
-    waypoints : (Vector2 | (()=>boolean)) [] = [
-        new Vector2(90, -6),
-        new Vector2(90, 2),
-        ()=>{
-            console.log("waiting for upper gate")
-            return false;
-        },
-        new Vector2(90, 6),
-        new Vector2(114, 6),
-        new Vector2(114, 15),
-        new Vector2(99, 15),
-        ()=>{
-            console.log("waiting for unloading")
-            return false;
-        },
-        new Vector2(99, 16),
-        new Vector2(114, 16),
-        new Vector2(114, 35),
-        new Vector2(74, 35),
-        new Vector2(74, 36),
-        ()=>{
-            console.log("waiting for lower gate")
-            return false;
-        },
-        new Vector2(74, 44)
-    ];
+    waypoints : (Vector2 | (()=>boolean)) [];
+    content : number;
 
-    constructor()
+    constructor(waypoints : (Vector2 | (()=>boolean)) [], content : number)
     {
         super();
+        this.waypoints = waypoints;
+        this.content = content;
 
         this.htmlElement.innerHTML = templateRight;
         this.pivot = new Vector2(3, 0);
@@ -103,7 +81,7 @@ class Car extends GameObject
                 }
             } else {
                 if(nextWaypoint()) {
-
+                    this.waypoints.shift();
                 }
             }
         }
