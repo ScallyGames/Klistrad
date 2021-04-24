@@ -1,8 +1,9 @@
 import GameObject from './game-objects/game-object';
 import Car from './game-objects/car';
-import Gate from './game-objects/gate';
+import Gate, { GateDirection } from './game-objects/gate';
 import Vector2 from './vector2';
 import DebugPosition from './game-objects/debug-position';
+import GatePost from './game-objects/gate-post';
 
 class Game
 {
@@ -19,17 +20,24 @@ class Game
 
         this.addObject(new DebugPosition()); //delete me before release
 
-        let gate1 = new Gate(new Vector2(89, 3), 'i', 'o');
-        this.addObject(gate1);
-        let gate2 = new Gate(new Vector2(73, 37), 'k', 'l');
-        this.addObject(gate2);
+        let gateTopIn = new Gate(new Vector2(89, 4), 'i', GateDirection.Left);
+        this.addObject(gateTopIn);
+        let gateTopOut = new Gate(new Vector2(92, 4), 'o', GateDirection.Right);
+        this.addObject(gateTopOut);
+        let gateBottomOut = new Gate(new Vector2(73, 38), 'k', GateDirection.Left);
+        this.addObject(gateBottomOut);
+        let gateBottomIn = new Gate(new Vector2(76, 38), 'l', GateDirection.Right);
+        this.addObject(gateBottomIn);
+
+        this.addObject(new GatePost(new Vector2(91, 4)));
+        this.addObject(new GatePost(new Vector2(75, 38)));
 
 
         this.waypointsCarOne = [
             new Vector2(90, -6),
             new Vector2(90, 2),
             ()=>{
-                return gate1.isOpenLeft;
+                return gateTopIn.isOpen;
             },
             new Vector2(90, 6),
             new Vector2(114, 6),
@@ -45,7 +53,7 @@ class Game
             new Vector2(74, 35),
             new Vector2(74, 36),
             ()=>{
-                return gate2.isOpenLeft;
+                return gateBottomOut.isOpen;
             },
             new Vector2(74, 44)
         ];
@@ -53,7 +61,7 @@ class Game
             new Vector2(76, 45),
             new Vector2(76, 39),
             ()=>{
-                return gate2.isOpenRight;
+                return gateBottomIn.isOpen;
             },
             new Vector2(76, 36),
             new Vector2(116, 36),
@@ -68,7 +76,7 @@ class Game
             new Vector2(116, 5),
             new Vector2(92, 5),
             ()=>{
-                return gate1.isOpenRight;
+                return gateTopOut.isOpen;
             },
             new Vector2(92, -6)
         ];

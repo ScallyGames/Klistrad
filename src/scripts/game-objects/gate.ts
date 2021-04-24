@@ -1,78 +1,63 @@
 import InputManager, { InputManagerListener } from '../input-manager';
 import Vector2 from '../vector2';
 import GameObject from './game-object';
+
+enum GateDirection
+{
+    Left,
+    Right
+}
+
 const templateClosed = require('../../templates/gate-closed.pug')();
-const templateOpenLeft = require('../../templates/gate-open-left.pug')();
-const templateOpenRight = require('../../templates/gate-open-right.pug')();
-const templateOpenBoth = require('../../templates/gate-open-both.pug')();
+const templateOpen = {
+    [GateDirection.Left]: require('../../templates/gate-open-left.pug')() as string,
+    [GateDirection.Right]: require('../../templates/gate-open-right.pug')() as string,
+};
 
 class Gate extends GameObject
 {
-    static isOpen = false;
+    static isAnyOpen = false;
     inputManager = InputManager.getInstance();
 
-    keyLeft: string;
-    keyRight: string;
-    _isOpenLeft : boolean = false;
-    get isOpenLeft() : boolean
-    {
-        return this._isOpenLeft;
-    }
-    set isOpenLeft(value : boolean)
-    {
-        if(this._isOpenLeft != value)
-        {
-            if(value && Gate.isOpen) return;
+    key: string;
+    orientation: GateDirection;
 
-            Gate.isOpen = value;
-            this._isOpenLeft = value;
-            this.isDirty = true;
-        }
-    }
-    _isOpenRight : boolean = false;
-    get isOpenRight() : boolean
+    _isOpen : boolean = false;
+    get isOpen() : boolean
     {
-        return this._isOpenRight;
+        return this._isOpen;
     }
-    set isOpenRight(value : boolean)
+    set isOpen(value : boolean)
     {
-        if(this._isOpenRight != value)
+        if(this._isOpen != value)
         {
-            if(value && Gate.isOpen) return;
+            if(value && Gate.isAnyOpen) return;
 
-            Gate.isOpen = value;
-            this._isOpenRight = value;
+            Gate.isAnyOpen = value;
+            this._isOpen = value;
             this.isDirty = true;
         }
     }
 
     listeners : InputManagerListener[] = [];
 
-    constructor(position : Vector2, keyLeft: string, keyRight : string)
+    constructor(position : Vector2, key: string, orientation: GateDirection)
     {
         super();
 
-        this.keyLeft = keyLeft;
-        this.keyRight = keyRight;
+        this.key = key;
+        this.orientation = orientation;
 
         this.htmlElement.innerHTML = templateClosed;
         this.position = position;
         this.update();
 
-        this.listeners.push(new InputManagerListener("keydown", keyLeft, () => { 
-                this.isOpenLeft = true;
+        this.listeners.push(new InputManagerListener("keydown", key, () => { 
+                this.isOpen = true;
                 this.update();
         }));
-        this.listeners.push(new InputManagerListener("keyup", keyLeft, () => { 
-                this.isOpenLeft = false;
-                this.update();
-        }));
-        this.listeners.push(new InputManagerListener("keydown", keyRight, () => { 
-                this.isOpenRight = true;
-                this.update();
-        }));
-        this.listeners.push(new InputManagerListener("keyup", keyRight, () => { 
-                this.isOpenRight = false;
+        this.listeners.push(new InputManagerListener("keyup", key, () => { 
+                this.isOpen = false;
                 this.update();
         }));
 
@@ -86,17 +71,9 @@ class Gate extends GameObject
     {
         if(this.isDirty)
         {
-            if(this.isOpenLeft && this.isOpenRight)
+            if(this.isOpen)
             {
-                this.htmlElement.innerHTML = templateOpenBoth;
-            }
-            else if(this.isOpenLeft)
-            {
-                this.htmlElement.innerHTML = templateOpenLeft;
-            }
-            else if(this.isOpenRight)
-            {
-                this.htmlElement.innerHTML = templateOpenRight;
+                this.htmlElement.innerHTML = templateOpen[this.orientation];
             }
             else
             {
@@ -118,5 +95,5 @@ class Gate extends GameObject
     }
 }
 
-export { Gate };
+export { Gate, GateDirection };
 export default Gate;
