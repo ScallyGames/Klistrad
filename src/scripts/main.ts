@@ -9,9 +9,20 @@ import InputManager from './input-manager';
 (() =>
 {
     console.log("Loaded");
+
     const sizeTemplate = document.getElementById('size-template');
+    
+    const floatingPointCheck = document.createElement('pre');
+    sizeTemplate.append(floatingPointCheck);
+    floatingPointCheck.innerHTML = "X";
+    const floatingPointCheckStyle = getComputedStyle(floatingPointCheck);
+    const floatingPointCheckHeight = Number.parseFloat(floatingPointCheckStyle.height);
+    const supportsSubPixelLines = floatingPointCheckHeight - Math.floor(floatingPointCheckHeight) > 0.01;
+    floatingPointCheck.remove();
+
     const style = getComputedStyle(sizeTemplate);
-    Constants.charHeight = Number.parseFloat(style.height);
+    const height = Number.parseFloat(style.height);
+    Constants.charHeight = supportsSubPixelLines ? height : Math.floor(height);
     Constants.charWidth = Number.parseFloat(style.width);
     sizeTemplate.remove();
 
