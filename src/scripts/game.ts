@@ -4,6 +4,7 @@ import Gate, { GateDirection } from './game-objects/gate';
 import Vector2 from './vector2';
 import DebugPosition from './game-objects/debug-position';
 import GatePost from './game-objects/gate-post';
+import Vat from './game-objects/vat';
 
 class Game
 {
@@ -31,6 +32,8 @@ class Game
 
         this.addObject(new GatePost(new Vector2(91, 4)));
         this.addObject(new GatePost(new Vector2(75, 38)));
+        
+        this.addObject(new Vat(new Vector2(30, 15)));
 
 
         this.waypointsCarOne = [
