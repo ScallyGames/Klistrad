@@ -21,13 +21,13 @@ class Game
 
         this.addObject(new DebugPosition()); //delete me before release
 
-        let gateTopIn = new Gate(new Vector2(89, 4), 'i', GateDirection.Left);
+        let gateTopIn = new Gate(new Vector2(89, 4), new Vector2(-2, -1), 'i', GateDirection.Left);
         this.addObject(gateTopIn);
-        let gateTopOut = new Gate(new Vector2(92, 4), 'o', GateDirection.Right);
+        let gateTopOut = new Gate(new Vector2(92, 4), new Vector2(3, -1), 'o', GateDirection.Right);
         this.addObject(gateTopOut);
-        let gateBottomOut = new Gate(new Vector2(73, 38), 'k', GateDirection.Left);
+        let gateBottomOut = new Gate(new Vector2(73, 38), new Vector2(-2, 1), 'k', GateDirection.Left);
         this.addObject(gateBottomOut);
-        let gateBottomIn = new Gate(new Vector2(76, 38), 'l', GateDirection.Right);
+        let gateBottomIn = new Gate(new Vector2(76, 38), new Vector2(3, 1), 'l', GateDirection.Right);
         this.addObject(gateBottomIn);
 
         this.addObject(new GatePost(new Vector2(91, 4)));

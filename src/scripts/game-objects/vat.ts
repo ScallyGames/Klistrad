@@ -27,7 +27,7 @@ class Vat extends GameObject {
     constructor(position : Vector2) {
         super();
     
-        this.htmlElement.innerHTML = template;
+        this.contentHtmlElement.innerHTML = template;
 
         this.contentElement = this.htmlElement.getElementsByClassName('content')[0] as HTMLElement;
 

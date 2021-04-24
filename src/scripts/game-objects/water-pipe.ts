@@ -8,7 +8,7 @@ class WaterPipe extends GameObject {
         super();
         this.content = 0;
 
-        this.htmlElement.innerHTML = template;
+        this.contentHtmlElement.innerHTML = template;
     }
 }
 

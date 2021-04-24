@@ -38,11 +38,14 @@ class GameObject
 
     protected isDirty : boolean = true;
     htmlElement : HTMLElement;
+    contentHtmlElement : HTMLElement;
 
     constructor()
     {
         this.htmlElement = document.createElement('div');
         this.htmlElement.classList.add('game-object');
+        this.contentHtmlElement = document.createElement('div');
+        this.htmlElement.appendChild(this.contentHtmlElement);
     }
 
     update() : void

@@ -10,7 +10,7 @@ class DebugPosition extends GameObject
     {
         super();
 
-        this.htmlElement.innerHTML = template;
+        this.contentHtmlElement.innerHTML = template;
         this.update();
 
         document.addEventListener("keydown", this.eventListener);

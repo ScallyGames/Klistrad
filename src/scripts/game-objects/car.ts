@@ -16,7 +16,7 @@ class Car extends GameObject
         this.waypoints = waypoints;
         this.content = content;
 
-        this.htmlElement.innerHTML = templateRight;
+        this.contentHtmlElement.innerHTML = templateRight;
         this.pivot = new Vector2(3, 0);
         if(this.waypoints[0] instanceof Vector2) {
             this.position = this.waypoints[0];
@@ -29,25 +29,25 @@ class Car extends GameObject
     }
 
     private moveUp() {
-        this.htmlElement.innerHTML = templateUp;
+        this.contentHtmlElement.innerHTML = templateUp;
         this.pivot = new Vector2(1, 1);
         this.position = new Vector2(this.position.x, this.position.y - 1);
     }
 
     private moveDown() {
-        this.htmlElement.innerHTML = templateDown;
+        this.contentHtmlElement.innerHTML = templateDown;
         this.pivot = new Vector2(1, 1);
         this.position = new Vector2(this.position.x, this.position.y + 1);
     }
 
     private moveRight() {
-        this.htmlElement.innerHTML = templateRight;
+        this.contentHtmlElement.innerHTML = templateRight;
         this.pivot = new Vector2(3, 0);
         this.position = new Vector2(this.position.x + 1, this.position.y);
     }
 
     private moveLeft() {
-        this.htmlElement.innerHTML = templateLeft;
+        this.contentHtmlElement.innerHTML = templateLeft;
         this.pivot = new Vector2(2, 0);
         this.position = new Vector2(this.position.x - 1, this.position.y);
     }

@@ -1,6 +1,6 @@
 import InputManager, { InputManagerListener } from '../input-manager';
 import Vector2 from '../vector2';
-import GameObject from './game-object';
+import InteractableGameObject from './interactable-game-object';
 
 enum GateDirection
 {
@@ -14,7 +14,7 @@ const templateOpen = {
     [GateDirection.Right]: require('../../templates/gate-open-right.pug')() as string,
 };
 
-class Gate extends GameObject
+class Gate extends InteractableGameObject
 {
     static isAnyOpen = false;
     inputManager = InputManager.getInstance();
@@ -41,14 +41,14 @@ class Gate extends GameObject
 
     listeners : InputManagerListener[] = [];
 
-    constructor(position : Vector2, key: string, orientation: GateDirection)
+    constructor(position : Vector2, labelPosition: Vector2, key: string, orientation: GateDirection)
     {
-        super();
+        super(key, labelPosition);
 
         this.key = key;
         this.orientation = orientation;
 
-        this.htmlElement.innerHTML = templateClosed;
+        this.contentHtmlElement.innerHTML = templateClosed;
         this.position = position;
         this.update();
 
@@ -73,11 +73,11 @@ class Gate extends GameObject
         {
             if(this.isOpen)
             {
-                this.htmlElement.innerHTML = templateOpen[this.orientation];
+                this.contentHtmlElement.innerHTML = templateOpen[this.orientation];
             }
             else
             {
-                this.htmlElement.innerHTML = templateClosed;
+                this.contentHtmlElement.innerHTML = templateClosed;
             }
         }
         super.update();

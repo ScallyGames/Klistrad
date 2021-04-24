@@ -6,7 +6,7 @@ class GatePost extends GameObject {
     constructor(position : Vector2) {
         super();
     
-        this.htmlElement.innerHTML = template;
+        this.contentHtmlElement.innerHTML = template;
         this.position = position;
         this.update();
     }
