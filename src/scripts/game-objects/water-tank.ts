@@ -1,6 +1,8 @@
 import Vector2 from '../vector2';
 import GameObject from './game-object';
 import Car from './car';
+import InputManager, { InputManagerListener } from '../input-manager';
+import Utils from '../utils';
 const template = require('../../templates/water-tank.pug')();
 
 enum FillState 
@@ -25,17 +27,34 @@ class WaterTank extends GameObject {
     content : number;
     contentMax : number = 1000;
     key : string;
+    inputManager = InputManager.getInstance();
     contentElement : HTMLElement;
 
+    _isOpen : boolean = false;
+    get isOpen() : boolean
+    {
+        return this._isOpen;
+    }
+    set isOpen(value : boolean)
+    {
+        if(this._isOpen != value)
+        {
+            this._isOpen = value;
+            this.isDirty = true;
+        }
+    }
+
+    listeners : InputManagerListener[] = [];
+
     public transfer(car : Car) : boolean {
-        if(car.content > 0) {
+        if(car.content > 0 && this.isOpen) {
             let fillAmount = Math.min(car.content, car.fillRate);
             car.content -= fillAmount;
             this.content += fillAmount;
-            return false;
-        } else {
+        } else if(car.content <= 0) {
             return true;
         }
+        return false;
     }
 
     constructor(position : Vector2, key: string) {
@@ -44,15 +63,29 @@ class WaterTank extends GameObject {
         this.position = position;
         this.htmlElement.innerHTML = template;
         
-        this.contentElement = this.htmlElement.getElementsByClassName('content')[0] as HTMLElement;
+        this.key = key;
+        this.listeners.push(new InputManagerListener("keydown", key, () => { 
+            this.isOpen = true;
+            this.update();
+        }));
+        this.listeners.push(new InputManagerListener("keyup", key, () => { 
+                this.isOpen = false;
+                this.update();
+        }));
 
+        this.contentElement = this.htmlElement.getElementsByClassName('content')[0] as HTMLElement;
         this.contentElement.innerHTML = contentTemplates[FillState.Empty];
+
+        for(let listener of this.listeners)
+        {
+            this.inputManager.addListener(listener.event, listener.key, listener.callback);
+        }
 
         this.update();
     }
 
     update() {
-        let calc = Math.floor(this.content / this.contentMax * 4) as FillState;
+        let calc = Math.floor(this.content / this.contentMax * Utils.getMaxEnumValue(FillState)) as FillState;
         this.contentElement.innerHTML = contentTemplates[calc];
         super.update();
     }
