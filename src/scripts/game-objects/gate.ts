@@ -8,6 +8,8 @@ const templateOpenBoth = require('../../templates/gate-open-both.pug')();
 
 class Gate extends GameObject
 {
+    static isOpen = false;
+
     keyLeft: string;
     keyRight: string;
     _isOpenLeft : boolean = false;
@@ -19,6 +21,9 @@ class Gate extends GameObject
     {
         if(this._isOpenLeft != value)
         {
+            if(value && Gate.isOpen) return;
+
+            Gate.isOpen = value;
             this._isOpenLeft = value;
             this.isDirty = true;
         }
@@ -32,6 +37,9 @@ class Gate extends GameObject
     {
         if(this._isOpenRight != value)
         {
+            if(value && Gate.isOpen) return;
+
+            Gate.isOpen = value;
             this._isOpenRight = value;
             this.isDirty = true;
         }
