@@ -59,7 +59,7 @@ class Game
             ()=>{
                 return gateBottomOut.isOpen;
             },
-            new Vector2(74, 44)
+            new Vector2(73, 44)
         ];
         this.waypointsCarTwo = [
             new Vector2(75, 45),
