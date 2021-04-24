@@ -1,3 +1,5 @@
+- var referenceGrid = false
+
 doctype html
 html(lang="en")
   head
@@ -5,6 +7,11 @@ html(lang="en")
     link(rel="stylesheet" href="fonts.css")
     link(rel="stylesheet" href="style.css")
   body
-    .game
-      include templates/background
+    #game
+      #size-template
+      if(referenceGrid)
+        include templates/referenceGrid
+      else
+        include templates/background
       include templates/wall
+      include templates/street
