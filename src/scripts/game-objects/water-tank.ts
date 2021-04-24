@@ -5,8 +5,7 @@ import InputManager, { InputManagerListener } from '../input-manager';
 import Utils from '../utils';
 const template = require('../../templates/water-tank.pug')();
 
-enum FillState 
-{ 
+enum FillState { 
     Empty,
     Low,
     Medium,
@@ -14,13 +13,16 @@ enum FillState
     Full
 }
 
-const contentTemplates = 
-{
+const contentTemplates = {
     [FillState.Empty]: require('../../templates/water-tank-empty.pug')() as string,
     [FillState.Low]: require('../../templates/water-tank-low.pug')() as string,
     [FillState.Medium]: require('../../templates/water-tank-med.pug')() as string,
     [FillState.High]: require('../../templates/water-tank-high.pug')() as string,
     [FillState.Full]: require('../../templates/water-tank-full.pug')() as string,
+}
+const valveTemplates = {
+    [0]: require('../../templates/water-tank-valve-closed.pug')() as string,
+    [1]: require('../../templates/water-tank-valve-open.pug')() as string,
 }
 
 class WaterTank extends GameObject {
@@ -29,6 +31,7 @@ class WaterTank extends GameObject {
     key : string;
     inputManager = InputManager.getInstance();
     contentElement : HTMLElement;
+    valveElement : HTMLElement;
 
     _isOpen : boolean = false;
     get isOpen() : boolean
@@ -66,15 +69,20 @@ class WaterTank extends GameObject {
         this.key = key;
         this.listeners.push(new InputManagerListener("keydown", key, () => { 
             this.isOpen = true;
+            this.valveElement.innerHTML = valveTemplates[1];
             this.update();
         }));
         this.listeners.push(new InputManagerListener("keyup", key, () => { 
-                this.isOpen = false;
-                this.update();
+            this.isOpen = false;
+            this.valveElement.innerHTML = valveTemplates[0];
+            this.update();
         }));
 
         this.contentElement = this.htmlElement.getElementsByClassName('content')[0] as HTMLElement;
         this.contentElement.innerHTML = contentTemplates[FillState.Empty];
+
+        this.valveElement = this.htmlElement.getElementsByClassName('valve')[0] as HTMLElement;//99,12
+        this.valveElement.innerHTML = valveTemplates[0];
 
         for(let listener of this.listeners)
         {
