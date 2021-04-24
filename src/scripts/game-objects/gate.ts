@@ -1,4 +1,4 @@
-import { timeStamp } from 'console';
+import InputManager, { InputManagerListener } from '../input-manager';
 import Vector2 from '../vector2';
 import GameObject from './game-object';
 const templateClosed = require('../../templates/gate-closed.pug')();
@@ -9,6 +9,7 @@ const templateOpenBoth = require('../../templates/gate-open-both.pug')();
 class Gate extends GameObject
 {
     static isOpen = false;
+    inputManager = InputManager.getInstance();
 
     keyLeft: string;
     keyRight: string;
@@ -44,7 +45,8 @@ class Gate extends GameObject
             this.isDirty = true;
         }
     }
-    eventListener = (e : KeyboardEvent) => this.handleKey(e);
+
+    listeners : InputManagerListener[] = [];
 
     constructor(position : Vector2, keyLeft: string, keyRight : string)
     {
@@ -57,21 +59,27 @@ class Gate extends GameObject
         this.position = position;
         this.update();
 
-        document.addEventListener("keydown", this.eventListener);
-    }
+        this.listeners.push(new InputManagerListener("keydown", keyLeft, () => { 
+                this.isOpenLeft = true;
+                this.update();
+        }));
+        this.listeners.push(new InputManagerListener("keyup", keyLeft, () => { 
+                this.isOpenLeft = false;
+                this.update();
+        }));
+        this.listeners.push(new InputManagerListener("keydown", keyRight, () => { 
+                this.isOpenRight = true;
+                this.update();
+        }));
+        this.listeners.push(new InputManagerListener("keyup", keyRight, () => { 
+                this.isOpenRight = false;
+                this.update();
+        }));
 
-    handleKey(e : KeyboardEvent) 
-    {
-        switch (e.key)
+        for(let listener of this.listeners)
         {
-            case this.keyLeft:
-                this.isOpenLeft = !this.isOpenLeft;
-                break;
-            case this.keyRight:
-                this.isOpenRight = !this.isOpenRight;
-                break;
+            this.inputManager.addListener(listener.event, listener.key, listener.callback);
         }
-        this.update();
     }
 
     update()
@@ -101,7 +109,11 @@ class Gate extends GameObject
 
     destroy()
     {
-        document.removeEventListener("keydown", this.eventListener);
+        for(let listener of this.listeners)
+        {
+            this.inputManager.removeListener(listener.event, listener.key, listener.callback);
+        }
+
         super.destroy();
     }
 }
