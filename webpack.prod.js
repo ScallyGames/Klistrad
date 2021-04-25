@@ -4,10 +4,5 @@ const coreConfig = require('./webpack.config');
 
 module.exports = {
     ... coreConfig,
-    devtool: 'inline-source-map',
-    mode: 'development',
-    devServer: {
-        contentBase: path.join(__dirname, 'dist'),
-        port: 3000,
-    },
+    mode: 'production',
 };
