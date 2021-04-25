@@ -176,9 +176,9 @@ class Game
         this.addObject(new Car([...this.waypointsCarOne], this.waterCarAmount, 'water'));
         this.addObject(new Car([...this.waypointsCarTwo], this.fuelCarArount, 'fuel'));
         
-        this.valves[0] = new PipeValve(new Vector2(25, 8), new Vector2(7, 2.3), Pos.Top, 'z');
+        this.valves[0] = new PipeValve(new Vector2(25, 8), new Vector2(7, 3), Pos.Top, 'z');
         this.valves[1] = new PipeValve(new Vector2(25, 8), new Vector2(13, 4), Pos.Mid, 'h');
-        this.valves[2] = new PipeValve(new Vector2(25, 8), new Vector2(13, 9.3), Pos.Bot, 'n');
+        this.valves[2] = new PipeValve(new Vector2(25, 8), new Vector2(7, 9), Pos.Bot, 'n');
         this.valves.forEach(element => {
             this.addObject(element);
         });
