@@ -15,6 +15,7 @@ import Fillable from './interfaces/fillable';
 import ConveyorBelt from './game-objects/conveyor-belt';
 import Orientation from './orientation';
 import SwitchableConveyorBelt from './game-objects/switchable-conveyor-belt';
+import ConveyorTunnel, { TunnelDirection } from './game-objects/conveyor-tunnel';
 
 class Game
 {
@@ -52,66 +53,10 @@ class Game
         
         let waterTank = new WaterTank(new Vector2(73, 7), new Vector2(30, 4), 'j', spillage);
         
-        let previousTargetMain : GameObject & Fillable = null;
-        let previousTargetSwitch : GameObject & Fillable = null;
         
-        // Top left
-        for(let x = 26; x <= 34; x++)
-        {
-            previousTargetMain = new ConveyorBelt(new Vector2(x, 28), previousTargetMain, Orientation.Left);
-            this.addObject(previousTargetMain);
-        }
-        // Top right
-        for(let x = 44; x >= 36; x--)
-        {
-            previousTargetSwitch = new ConveyorBelt(new Vector2(x, 28), previousTargetSwitch, Orientation.Right);
-            this.addObject(previousTargetSwitch);
-        }
-        // Switch top
-        previousTargetMain = new SwitchableConveyorBelt(new Vector2(35, 28), new Vector2(0, -1), 'w', previousTargetMain, previousTargetSwitch, Orientation.Left, Orientation.Right);
-        // Middle up
-        this.addObject(previousTargetMain);
-        for(let y = 29; y <= 31; y++)
-        {
-            previousTargetMain = new ConveyorBelt(new Vector2(35, y), previousTargetMain, Orientation.Up);
-            this.addObject(previousTargetMain);
-        }
+        let conveyorInput = this.initializeConveyors(null, null, null, null);
 
-        let previousTargetBottomMain : GameObject & Fillable = null;
-        let previousTargetBottomSwitch : GameObject & Fillable = null;
-        // Bottom left
-        for(let x = 26; x <= 34; x++)
-        {
-            previousTargetBottomMain = new ConveyorBelt(new Vector2(x, 36), previousTargetBottomMain, Orientation.Left);
-            this.addObject(previousTargetBottomMain);
-        }
-        // Bottom right
-        for(let x = 44; x >= 36; x--)
-        {
-            previousTargetBottomSwitch = new ConveyorBelt(new Vector2(x, 36), previousTargetBottomSwitch, Orientation.Right);
-            this.addObject(previousTargetBottomSwitch);
-        }
-        // Switch bottom
-        previousTargetSwitch = new SwitchableConveyorBelt(new Vector2(35, 36), new Vector2(0, 1), 'x', previousTargetBottomMain, previousTargetBottomSwitch, Orientation.Left, Orientation.Right);
-        // Middle down
-        this.addObject(previousTargetSwitch);
-        for(let y = 35; y >= 33; y--)
-        {
-            previousTargetSwitch = new ConveyorBelt(new Vector2(35, y), previousTargetSwitch, Orientation.Down);
-            this.addObject(previousTargetSwitch);
-        }
-
-        // Switch center
-        previousTargetMain = new SwitchableConveyorBelt(new Vector2(35, 32), new Vector2(-2, 0), 's', previousTargetMain, previousTargetSwitch, Orientation.Up, Orientation.Down);
-        this.addObject(previousTargetMain);
-        // Center to centrifuge
-        for(let x = 36; x <= 78; x++)
-        {
-            previousTargetMain = new ConveyorBelt(new Vector2(x, 32), previousTargetMain, Orientation.Left);
-            this.addObject(previousTargetMain);
-        }
-
-        const centrifuge = new Centrifuge(new Vector2(79, 30), new Vector2(4, 0), 'c', previousTargetMain);
+        const centrifuge = new Centrifuge(new Vector2(79, 30), new Vector2(4, 0), 'c', conveyorInput);
         this.addObject(centrifuge);
 
         const crane = new Crane(new Vector2(86, 30), new Vector2(1, -2), 'g', 86, 101, centrifuge);
@@ -213,6 +158,123 @@ class Game
         {
             gameObject.lateUpdate();
         }
+    }
+
+
+
+    
+    private initializeConveyors(
+        outputTopLeft: GameObject & Fillable, 
+        outputTopRight: GameObject & Fillable, 
+        outputBottomLeft: GameObject & Fillable, 
+        outputBottomRight: GameObject & Fillable
+    ) : GameObject & Fillable
+    {
+        let previousTargetMain = outputTopLeft;
+        let previousTargetSwitch = outputTopRight;
+        let previousTargetBottomMain = outputBottomLeft;
+        let previousTargetBottomSwitch = outputBottomRight;
+
+        // Top left
+        for (let y = 10; y <= 12; y++) {
+            previousTargetMain = new ConveyorBelt(new Vector2(19, y), previousTargetMain, Orientation.Up);
+            this.addObject(previousTargetMain);
+        }
+        for (let x = 20; x <= 28; x++) {
+            previousTargetMain = new ConveyorBelt(new Vector2(x, 12), previousTargetMain, Orientation.Left);
+            this.addObject(previousTargetMain);
+        }
+        for (let y = 13; y <= 28; y++) {
+            previousTargetMain = new ConveyorBelt(new Vector2(28, y), previousTargetMain, Orientation.Up);
+            if(18 <= y && y <= 20)
+            {
+                previousTargetMain.htmlElement.style.display = "none";
+            }
+            this.addObject(previousTargetMain);
+        }
+        this.addObject(new ConveyorTunnel(new Vector2(28, 18), TunnelDirection.Exit));
+        this.addObject(new ConveyorTunnel(new Vector2(28, 20), TunnelDirection.Entry));
+        for (let x = 29; x <= 34; x++) {
+            previousTargetMain = new ConveyorBelt(new Vector2(x, 28), previousTargetMain, Orientation.Left);
+            this.addObject(previousTargetMain);
+        }
+        // Top right
+        for (let y = 10; y <= 12; y++) {
+            previousTargetSwitch = new ConveyorBelt(new Vector2(51, y), previousTargetSwitch, Orientation.Up);
+            this.addObject(previousTargetSwitch);
+        }
+        for (let x = 50; x >= 42; x--) {
+            previousTargetSwitch = new ConveyorBelt(new Vector2(x, 12), previousTargetSwitch, Orientation.Right);
+            this.addObject(previousTargetSwitch);
+        }
+        for (let y = 13; y <= 28; y++) {
+            previousTargetSwitch = new ConveyorBelt(new Vector2(42, y), previousTargetSwitch, Orientation.Up);
+            if((13 <= y && y <= 15) || (18 <= y && y <= 20))
+            {
+                previousTargetSwitch.htmlElement.style.display = "none";
+            }
+            this.addObject(previousTargetSwitch);
+        }
+        this.addObject(new ConveyorTunnel(new Vector2(42, 13), TunnelDirection.Exit));
+        this.addObject(new ConveyorTunnel(new Vector2(42, 15), TunnelDirection.Entry));
+        this.addObject(new ConveyorTunnel(new Vector2(42, 18), TunnelDirection.Exit));
+        this.addObject(new ConveyorTunnel(new Vector2(42, 20), TunnelDirection.Entry));
+        for (let x = 41; x >= 36; x--) {
+            previousTargetSwitch = new ConveyorBelt(new Vector2(x, 28), previousTargetSwitch, Orientation.Right);
+            this.addObject(previousTargetSwitch);
+        }
+        // Switch top
+        previousTargetMain = new SwitchableConveyorBelt(new Vector2(35, 28), new Vector2(0, -1), 'w', previousTargetMain, previousTargetSwitch, Orientation.Left, Orientation.Right);
+        // Middle up
+        this.addObject(previousTargetMain);
+        for (let y = 29; y <= 31; y++) {
+            previousTargetMain = new ConveyorBelt(new Vector2(35, y), previousTargetMain, Orientation.Up);
+            this.addObject(previousTargetMain);
+        }
+
+        // Bottom left
+        for (let y = 20; y <= 36; y++) {
+            previousTargetBottomMain = new ConveyorBelt(new Vector2(19, y), previousTargetBottomMain, Orientation.Up);
+            this.addObject(previousTargetBottomMain);
+        }
+        for (let x = 20; x <= 34; x++) {
+            previousTargetBottomMain = new ConveyorBelt(new Vector2(x, 36), previousTargetBottomMain, Orientation.Left);
+            this.addObject(previousTargetBottomMain);
+        }
+        // Bottom right
+        for (let y = 20; y <= 36; y++) {
+            previousTargetBottomSwitch = new ConveyorBelt(new Vector2(51, y), previousTargetBottomSwitch, Orientation.Up);
+            if(31 <= y && y <= 33)
+            {
+                previousTargetBottomSwitch.htmlElement.style.display = "none";
+            }
+            this.addObject(previousTargetBottomSwitch);
+        }
+        this.addObject(new ConveyorTunnel(new Vector2(51, 31), TunnelDirection.Exit));
+        this.addObject(new ConveyorTunnel(new Vector2(51, 33), TunnelDirection.Entry));
+        for (let x = 50; x >= 36; x--) {
+            previousTargetBottomSwitch = new ConveyorBelt(new Vector2(x, 36), previousTargetBottomSwitch, Orientation.Right);
+            this.addObject(previousTargetBottomSwitch);
+        }
+        // Switch bottom
+        previousTargetSwitch = new SwitchableConveyorBelt(new Vector2(35, 36), new Vector2(0, 1), 'x', previousTargetBottomMain, previousTargetBottomSwitch, Orientation.Left, Orientation.Right);
+        // Middle down
+        this.addObject(previousTargetSwitch);
+        for (let y = 35; y >= 33; y--) {
+            previousTargetSwitch = new ConveyorBelt(new Vector2(35, y), previousTargetSwitch, Orientation.Down);
+            this.addObject(previousTargetSwitch);
+        }
+
+        // Switch center
+        previousTargetMain = new SwitchableConveyorBelt(new Vector2(35, 32), new Vector2(-2, 0), 's', previousTargetMain, previousTargetSwitch, Orientation.Up, Orientation.Down);
+        this.addObject(previousTargetMain);
+        // Center to centrifuge
+        for (let x = 36; x <= 78; x++) {
+            previousTargetMain = new ConveyorBelt(new Vector2(x, 32), previousTargetMain, Orientation.Left);
+            this.addObject(previousTargetMain);
+        }
+
+        return previousTargetMain;
     }
 }
 
