@@ -100,7 +100,7 @@ class Game
         this.addObject(new Vat(new Vector2(46, 6)));
         this.addObject(new Vat(new Vector2(46, 16)));
         
-        this.addObject(new PipeNetwork(new Vector2(25, 8)));
+        this.addObject(new PipeNetwork(new Vector2(25, 8), 'u'));
     }
     
     addObject(obj : GameObject) : void
