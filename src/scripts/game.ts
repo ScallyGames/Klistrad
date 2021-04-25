@@ -11,6 +11,10 @@ import PipeValve, { Pos } from './game-objects/pipe-valve';
 import Crane from './game-objects/crane';
 import Centrifuge from './game-objects/centrifuge';
 import Spillage from './game-objects/spillage';
+import Fillable from './interfaces/fillable';
+import ConveyorBelt from './game-objects/conveyor-belt';
+import Orientation from './orientation';
+import SwitchableConveyorBelt from './game-objects/switchable-conveyor-belt';
 
 class Game
 {
@@ -48,7 +52,66 @@ class Game
         
         let waterTank = new WaterTank(new Vector2(73, 7), new Vector2(30, 4), 'j', spillage);
         
-        const centrifuge = new Centrifuge(new Vector2(79, 30), new Vector2(4, 0), 'c');
+        let previousTargetMain : GameObject & Fillable = null;
+        let previousTargetSwitch : GameObject & Fillable = null;
+        
+        // Top left
+        for(let x = 26; x <= 34; x++)
+        {
+            previousTargetMain = new ConveyorBelt(new Vector2(x, 28), previousTargetMain, Orientation.Left);
+            this.addObject(previousTargetMain);
+        }
+        // Top right
+        for(let x = 44; x >= 36; x--)
+        {
+            previousTargetSwitch = new ConveyorBelt(new Vector2(x, 28), previousTargetSwitch, Orientation.Right);
+            this.addObject(previousTargetSwitch);
+        }
+        // Switch top
+        previousTargetMain = new SwitchableConveyorBelt(new Vector2(35, 28), new Vector2(0, -1), 'w', previousTargetMain, previousTargetSwitch, Orientation.Left, Orientation.Right);
+        // Middle up
+        this.addObject(previousTargetMain);
+        for(let y = 29; y <= 31; y++)
+        {
+            previousTargetMain = new ConveyorBelt(new Vector2(35, y), previousTargetMain, Orientation.Up);
+            this.addObject(previousTargetMain);
+        }
+
+        let previousTargetBottomMain : GameObject & Fillable = null;
+        let previousTargetBottomSwitch : GameObject & Fillable = null;
+        // Bottom left
+        for(let x = 26; x <= 34; x++)
+        {
+            previousTargetBottomMain = new ConveyorBelt(new Vector2(x, 36), previousTargetBottomMain, Orientation.Left);
+            this.addObject(previousTargetBottomMain);
+        }
+        // Bottom right
+        for(let x = 44; x >= 36; x--)
+        {
+            previousTargetBottomSwitch = new ConveyorBelt(new Vector2(x, 36), previousTargetBottomSwitch, Orientation.Right);
+            this.addObject(previousTargetBottomSwitch);
+        }
+        // Switch bottom
+        previousTargetSwitch = new SwitchableConveyorBelt(new Vector2(35, 36), new Vector2(0, 1), 'x', previousTargetBottomMain, previousTargetBottomSwitch, Orientation.Left, Orientation.Right);
+        // Middle down
+        this.addObject(previousTargetSwitch);
+        for(let y = 35; y >= 33; y--)
+        {
+            previousTargetSwitch = new ConveyorBelt(new Vector2(35, y), previousTargetSwitch, Orientation.Down);
+            this.addObject(previousTargetSwitch);
+        }
+
+        // Switch center
+        previousTargetMain = new SwitchableConveyorBelt(new Vector2(35, 32), new Vector2(-2, 0), 's', previousTargetMain, previousTargetSwitch, Orientation.Up, Orientation.Down);
+        this.addObject(previousTargetMain);
+        // Center to centrifuge
+        for(let x = 36; x <= 78; x++)
+        {
+            previousTargetMain = new ConveyorBelt(new Vector2(x, 32), previousTargetMain, Orientation.Left);
+            this.addObject(previousTargetMain);
+        }
+
+        const centrifuge = new Centrifuge(new Vector2(79, 30), new Vector2(4, 0), 'c', previousTargetMain);
         this.addObject(centrifuge);
 
         const crane = new Crane(new Vector2(86, 30), new Vector2(1, -2), 'g', 86, 101, centrifuge);
@@ -144,6 +207,11 @@ class Game
         for(let gameObject of this.gameObjects)
         {
             gameObject.update();
+        }
+
+        for(let gameObject of this.gameObjects)
+        {
+            gameObject.lateUpdate();
         }
     }
 }

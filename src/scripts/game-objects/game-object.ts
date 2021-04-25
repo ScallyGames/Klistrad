@@ -72,6 +72,11 @@ class GameObject
         }
     }
 
+    lateUpdate() : void
+    {
+        
+    }
+
     destroy() 
     {
         this._isMarkedForDestruction = true;

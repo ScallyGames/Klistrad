@@ -48,15 +48,17 @@ class Centrifuge extends InteractableGameObject implements Fillable
     isFull : boolean[] = [false, false];
     isOn : boolean = false;
     currentSpinStep = 0;
+    target : Fillable;
 
     listeners : InputManagerListener[] = [];
 
-    constructor(position : Vector2, labelPosition : Vector2, key : string)
+    constructor(position : Vector2, labelPosition : Vector2, key : string, target : Fillable)
     {
         super(key, labelPosition);
 
         this.updateTexture();
         this.position = position;
+        this.target = target;
         this.update();
 
         this.listeners.push(new InputManagerListener("keydown", key, () => { 
@@ -78,6 +80,18 @@ class Centrifuge extends InteractableGameObject implements Fillable
         {
             this.currentSpinStep = (this.currentSpinStep + 1) % 8;
             this.updateTexture();
+        }
+        else
+        {
+            let side = (this.currentSpinStep / 4);
+            if(this.isFull[side])
+            {
+                if(this.target.fill())
+                {
+                    this.isFull[side] = false;
+                    this.updateTexture();
+                }
+            }
         }
 
         super.update();
