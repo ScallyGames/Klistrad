@@ -9,7 +9,7 @@ enum Pos {
     Bot
 }
 
-const valveTemplates = {
+const valveTemplates : { [k : number]: { [key: number]: string} } = {
     [Pos.Top]: {
         [0]: require('../../templates/pipe-valve-top-left.pug')() as string,
         [1]: require('../../templates/pipe-valve-top-right.pug')() as string,
@@ -51,16 +51,14 @@ class PipeValve extends InteractableGameObject {
         this.position = position;
         this.valveType = type;
         this.key = key;
-        this.listeners.push(new InputManagerListener("keydown", key, () => { 
-            this.isOpen = true;
-            this.valveElement.innerHTML = valveTemplates[this.valveType][1];
+        document.addEventListener('keydown', (e : KeyboardEvent) => { 
+            if(e.repeat) return;
+            if(e.key !== this.key) return;
+
+            this.isOpen = !this.isOpen;
+            this.valveElement.innerHTML = valveTemplates[this.valveType][(+this.isOpen)];
             this.update();
-        }));
-        this.listeners.push(new InputManagerListener("keyup", key, () => { 
-            this.isOpen = false;
-            this.valveElement.innerHTML = valveTemplates[this.valveType][0];
-            this.update();
-        }));
+        });
 
         this.contentHtmlElement.innerHTML = template;
         this.valveElement = this.htmlElement.getElementsByClassName('valve')[0] as HTMLElement;

@@ -85,14 +85,13 @@ class SwitchableConveyorBelt extends InteractableGameObject implements Fillable
         this.update();
 
         
-        this.listeners.push(new InputManagerListener("keydown", key, () => { 
-            this.target = targetSwitch;
-            this.orientation = orientationSwitch;
-        }));
-        this.listeners.push(new InputManagerListener("keyup", key, () => { 
-            this.target = targetMain;
-            this.orientation = orientationMain;
-        }));
+        document.addEventListener('keydown', (e : KeyboardEvent) => { 
+            if(e.repeat) return;
+            if(e.key !== this.key) return;
+
+            this.target = this.target === targetMain ? targetSwitch : targetMain;
+            this.orientation = this.orientation === orientationMain ? orientationSwitch : orientationMain;
+        });
 
         for(let listener of this.listeners)
         {
