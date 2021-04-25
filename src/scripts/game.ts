@@ -43,17 +43,17 @@ class Game
         this.gameHtmlElement = document.getElementById('game');
         this.tickIntervalHandle = window.setInterval(() => this.update(), 1000 / this.refreshRate);
 
-        let gateTopIn = new Gate(new Vector2(88, 4), new Vector2(-2, -1), 'i', GateDirection.Left);
+        let gateTopIn = new Gate(new Vector2(88, 3), new Vector2(-2, -1), 'i', GateDirection.Left);
         this.addObject(gateTopIn);
-        let gateTopOut = new Gate(new Vector2(91, 4), new Vector2(3, -1), 'o', GateDirection.Right);
+        let gateTopOut = new Gate(new Vector2(91, 3), new Vector2(3, -1), 'o', GateDirection.Right);
         this.addObject(gateTopOut);
-        let gateBottomOut = new Gate(new Vector2(72, 38), new Vector2(-2, 1), 'k', GateDirection.Left);
+        let gateBottomOut = new Gate(new Vector2(72, 39), new Vector2(-2, 1), 'k', GateDirection.Left);
         this.addObject(gateBottomOut);
-        let gateBottomIn = new Gate(new Vector2(75, 38), new Vector2(3, 1), 'l', GateDirection.Right);
+        let gateBottomIn = new Gate(new Vector2(75, 39), new Vector2(3, 1), 'l', GateDirection.Right);
         this.addObject(gateBottomIn);
         
-        this.addObject(new GatePost(new Vector2(90, 4)));
-        this.addObject(new GatePost(new Vector2(74, 38)));
+        this.addObject(new GatePost(new Vector2(90, 3)));
+        this.addObject(new GatePost(new Vector2(74, 39)));
 
         let spillage = new Spillage(new Vector2(9, 13));
         this.addObject(spillage);
@@ -80,7 +80,7 @@ class Game
         this.addObject(waterTank);
         this.waypointsCarOne = [
             new Vector2(89, -6),
-            new Vector2(89, 2),
+            new Vector2(89, 0),
             ()=>{
                 return gateTopIn.isOpen;
             },
@@ -107,7 +107,7 @@ class Game
         ];
         this.waypointsCarTwo = [
             new Vector2(75, 45),
-            new Vector2(75, 39),
+            new Vector2(75, 41),
             ()=>{
                 return gateBottomIn.isOpen;
             },
