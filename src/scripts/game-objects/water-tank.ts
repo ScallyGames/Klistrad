@@ -1,8 +1,7 @@
 import Vector2 from '../vector2';
-import GameObject from './game-object';
+import InteractableGameObject from './interactable-game-object';
 import Car from './car';
 import InputManager, { InputManagerListener } from '../input-manager';
-import Utils from '../utils';
 const template = require('../../templates/water-tank.pug')();
 
 enum FillState { 
@@ -25,7 +24,7 @@ const valveTemplates = {
     [1]: require('../../templates/water-tank-valve-open.pug')() as string,
 }
 
-class WaterTank extends GameObject {
+class WaterTank extends InteractableGameObject {
     content : number;
     contentMax : number = 500;
     key : string;
@@ -60,11 +59,11 @@ class WaterTank extends GameObject {
         return false;
     }
 
-    constructor(position : Vector2, key: string) {
-        super();
+    constructor(position : Vector2, labelPosition: Vector2, key: string) {
+        super(key, labelPosition);
         this.content = 0;
         this.position = position;
-        this.htmlElement.innerHTML = template;
+        this.contentHtmlElement.innerHTML = template;
         
         this.key = key;
         this.listeners.push(new InputManagerListener("keydown", key, () => { 

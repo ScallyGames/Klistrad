@@ -38,7 +38,7 @@ class Game
         this.addObject(new GatePost(new Vector2(90, 4)));
         this.addObject(new GatePost(new Vector2(74, 38)));
         
-        let waterTank = new WaterTank(new Vector2(73, 7), 'j');
+        let waterTank = new WaterTank(new Vector2(73, 7), new Vector2(30, 4), 'j');
         this.addObject(waterTank);
         this.waypointsCarOne = [
             new Vector2(89, -6),
@@ -90,9 +90,9 @@ class Game
         this.addObject(new Car([...this.waypointsCarOne], 100));
         this.addObject(new Car([...this.waypointsCarTwo], 100));
         
-        this.valves[0] = new PipeValve(new Vector2(25, 8), Pos.Top, 'z');
-        this.valves[1] = new PipeValve(new Vector2(25, 8), Pos.Mid, 'h');
-        this.valves[2] = new PipeValve(new Vector2(25, 8), Pos.Bot, 'n');
+        this.valves[0] = new PipeValve(new Vector2(25, 8), new Vector2(7, 2.3), Pos.Top, 'z');
+        this.valves[1] = new PipeValve(new Vector2(25, 8), new Vector2(13, 4), Pos.Mid, 'h');
+        this.valves[2] = new PipeValve(new Vector2(25, 8), new Vector2(13, 9.3), Pos.Bot, 'n');
         this.valves.forEach(element => {
             this.addObject(element);
         });
@@ -104,7 +104,7 @@ class Game
             this.addObject(element);
         });
         
-        this.addObject(new PipeNetwork(new Vector2(25, 8), 'u', this.valves, this.vats, waterTank));
+        this.addObject(new PipeNetwork(new Vector2(25, 8), new Vector2(29, 4.3), 'u', this.valves, this.vats, waterTank));
     }
     
     addObject(obj : GameObject) : void

@@ -1,5 +1,5 @@
 import Vector2 from '../vector2';
-import GameObject from './game-object';
+import InteractableGameObject from './interactable-game-object';
 import InputManager, { InputManagerListener } from '../input-manager';
 import PipeValve from './pipe-valve';
 import Vat from './vat';
@@ -11,7 +11,7 @@ const valveTemplates = {
     [1]: require('../../templates/pipe-network-valve-open.pug')() as string,
 }
 
-class PipeNetwork extends GameObject {
+class PipeNetwork extends InteractableGameObject {
     key : string;
     valveElement : HTMLElement;
     inputManager = InputManager.getInstance();
@@ -36,8 +36,8 @@ class PipeNetwork extends GameObject {
 
     listeners : InputManagerListener[] = [];
 
-    constructor(position : Vector2, key : string, valves : PipeValve[], vats : Vat[], waterTank : WaterTank) {
-        super();
+    constructor(position : Vector2, labelPosition: Vector2, key : string, valves : PipeValve[], vats : Vat[], waterTank : WaterTank) {
+        super(key, labelPosition);
         this.position = position;
         this.key = key;
         this.valves = valves;

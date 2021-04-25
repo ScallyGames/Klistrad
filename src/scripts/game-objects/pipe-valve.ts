@@ -1,5 +1,5 @@
 import Vector2 from '../vector2';
-import GameObject from './game-object';
+import InteractableGameObject from './interactable-game-object';
 import InputManager, { InputManagerListener } from '../input-manager';
 const template = require('../../templates/pipe-valve.pug')();
 
@@ -24,7 +24,7 @@ const valveTemplates = {
     }
 }
 
-class PipeValve extends GameObject {
+class PipeValve extends InteractableGameObject {
     key : string;
     inputManager = InputManager.getInstance();
     valveElement : HTMLElement;
@@ -46,8 +46,8 @@ class PipeValve extends GameObject {
 
     listeners : InputManagerListener[] = [];
 
-    constructor(position : Vector2, type: Pos, key: string) {
-        super();
+    constructor(position : Vector2, labelPosition: Vector2, type: Pos, key: string) {
+        super(key, labelPosition);
         this.position = position;
         this.valveType = type;
         this.key = key;
@@ -62,7 +62,7 @@ class PipeValve extends GameObject {
             this.update();
         }));
 
-        this.htmlElement.innerHTML = template;
+        this.contentHtmlElement.innerHTML = template;
         this.valveElement = this.htmlElement.getElementsByClassName('valve')[0] as HTMLElement;
         this.valveElement.innerHTML = valveTemplates[this.valveType][0];
 
