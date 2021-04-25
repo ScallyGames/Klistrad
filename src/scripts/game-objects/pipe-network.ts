@@ -72,7 +72,7 @@ class PipeNetwork extends InteractableGameObject {
     }
 
     transfer(vat : Vat) {
-        let actualTransfer = Math.min(this.waterTank.content, this.fillrate, vat.contentMax - vat.content);
+        let actualTransfer = Math.min(this.waterTank.content, this.fillrate);
         this.waterTank.content -= actualTransfer;
         vat.content += actualTransfer;
     }

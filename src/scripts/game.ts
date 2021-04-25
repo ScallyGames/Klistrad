@@ -10,6 +10,7 @@ import PipeNetwork from './game-objects/pipe-network';
 import PipeValve, { Pos } from './game-objects/pipe-valve';
 import Crane from './game-objects/crane';
 import Centrifuge from './game-objects/centrifuge';
+import Spillage from './game-objects/spillage';
 
 class Game
 {
@@ -41,8 +42,11 @@ class Game
         
         this.addObject(new GatePost(new Vector2(90, 4)));
         this.addObject(new GatePost(new Vector2(74, 38)));
+
+        let spillage = new Spillage(new Vector2(9, 13));
+        this.addObject(spillage);
         
-        let waterTank = new WaterTank(new Vector2(73, 7), new Vector2(30, 4), 'j');
+        let waterTank = new WaterTank(new Vector2(73, 7), new Vector2(30, 4), 'j', spillage);
         
         const centrifuge = new Centrifuge(new Vector2(79, 30), new Vector2(4, 0), 'c');
         this.addObject(centrifuge);
@@ -115,10 +119,11 @@ class Game
         this.valves.forEach(element => {
             this.addObject(element);
         });
-        this.vats[0] = new Vat(new Vector2(11, 6));
-        this.vats[1] = new Vat(new Vector2(11, 16));
-        this.vats[2] = new Vat(new Vector2(46, 6));
-        this.vats[3] = new Vat(new Vector2(46, 16));
+
+        this.vats[0] = new Vat(new Vector2(11, 6), spillage);
+        this.vats[1] = new Vat(new Vector2(11, 16), spillage);
+        this.vats[2] = new Vat(new Vector2(46, 6), spillage);
+        this.vats[3] = new Vat(new Vector2(46, 16), spillage);
         this.vats.forEach(element => {
             this.addObject(element);
         });

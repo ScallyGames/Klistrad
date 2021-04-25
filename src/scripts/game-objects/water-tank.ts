@@ -2,6 +2,7 @@ import Vector2 from '../vector2';
 import InteractableGameObject from './interactable-game-object';
 import Car from './car';
 import InputManager, { InputManagerListener } from '../input-manager';
+import Spillage from './spillage';
 const template = require('../../templates/water-tank.pug')();
 
 enum FillState { 
@@ -9,7 +10,8 @@ enum FillState {
     Low,
     Medium,
     High,
-    Full
+    Full,
+    Overflow
 }
 
 const contentTemplates = {
@@ -18,6 +20,7 @@ const contentTemplates = {
     [FillState.Medium]: require('../../templates/water-tank-med.pug')() as string,
     [FillState.High]: require('../../templates/water-tank-high.pug')() as string,
     [FillState.Full]: require('../../templates/water-tank-full.pug')() as string,
+    [FillState.Overflow]: require('../../templates/water-tank-overflow.pug')() as string
 }
 const valveTemplates = {
     [0]: require('../../templates/water-tank-valve-closed.pug')() as string,
@@ -31,6 +34,8 @@ class WaterTank extends InteractableGameObject {
     inputManager = InputManager.getInstance();
     contentElement : HTMLElement;
     valveElement : HTMLElement;
+    spillageRate : number = 5;
+    spillageContainer : Spillage;
 
     static mutex : InteractableGameObject = null;
 
@@ -61,8 +66,9 @@ class WaterTank extends InteractableGameObject {
         return false;
     }
 
-    constructor(position : Vector2, labelPosition: Vector2, key: string) {
+    constructor(position : Vector2, labelPosition: Vector2, key: string,  spillageContainer : Spillage) {
         super(key, labelPosition);
+        this.spillageContainer = spillageContainer;
         this.content = 0;
         this.position = position;
         this.contentHtmlElement.innerHTML = template;
@@ -106,6 +112,10 @@ class WaterTank extends InteractableGameObject {
             this.contentElement.innerHTML = contentTemplates[FillState.Empty];
         } else if(this.content == this.contentMax) {
             this.contentElement.innerHTML = contentTemplates[FillState.Full];
+        } else if(this.content > this.contentMax) {
+            this.contentElement.innerHTML = contentTemplates[FillState.Overflow];
+            this.content -= this.spillageRate;
+            this.spillageContainer.transfer(this.spillageRate);
         } else {
             this.contentElement.innerHTML = contentTemplates[Math.floor(this.content / this.contentMax * 3) + 1 as FillState];
         }
