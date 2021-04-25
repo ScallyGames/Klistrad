@@ -43,9 +43,11 @@ templates["10"] = templates["01"]
 
 class Centrifuge extends InteractableGameObject implements Fillable
 {
+    static neededSteps = 3 * 8;
+
     inputManager = InputManager.getInstance();
 
-    isFull : boolean[] = [false, false];
+    remainingSteps : number[] = [null, null];
     isOn : boolean = false;
     currentSpinStep = 0;
     target : Fillable;
@@ -79,16 +81,23 @@ class Centrifuge extends InteractableGameObject implements Fillable
         if(this.isOn || (this.currentSpinStep % 4) !== 0)
         {
             this.currentSpinStep = (this.currentSpinStep + 1) % 8;
+
+            if(this.remainingSteps[0] !== null && this.remainingSteps[1] !== null)
+            {
+                this.remainingSteps[0]--;
+                this.remainingSteps[1]--;
+            }
+
             this.updateTexture();
         }
         else
         {
             let side = (this.currentSpinStep / 4);
-            if(this.isFull[side])
+            if(this.remainingSteps[side] === 0)
             {
                 if(this.target.fill())
                 {
-                    this.isFull[side] = false;
+                    this.remainingSteps[side] = null;
                     this.updateTexture();
                 }
             }
@@ -98,7 +107,7 @@ class Centrifuge extends InteractableGameObject implements Fillable
     }
     
     private updateTexture() {
-        const textureMap = templates[Utils.boolTo01String(this.isFull[0]) + Utils.boolTo01String(this.isFull[1])];
+        const textureMap = templates[Utils.boolTo01String(this.remainingSteps[0] !== null) + Utils.boolTo01String(this.remainingSteps[1] !== null)];
         this.contentHtmlElement.innerHTML = textureMap[this.currentSpinStep % textureMap.length];
     }
 
@@ -121,9 +130,9 @@ class Centrifuge extends InteractableGameObject implements Fillable
         // to the right array value and right string position
         let side = 1 - (this.currentSpinStep / 4);
 
-        if(this.isFull[side]) return false;
+        if(this.remainingSteps[side]) return false;
 
-        this.isFull[side] = true;
+        this.remainingSteps[side] = Centrifuge.neededSteps;
         this.updateTexture();
         return true;
     }
