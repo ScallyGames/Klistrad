@@ -61,7 +61,11 @@ class Game
             ()=>{
                 return gateBottomOut.isOpen;
             },
-            new Vector2(73, 44)
+            new Vector2(73, 44),
+            () => {
+                setTimeout(() => this.addObject(new Car([...this.waypointsCarOne], 100, 'water')), 2000);
+                return true;
+            },
         ];
         this.waypointsCarTwo = [
             new Vector2(75, 45),
@@ -85,7 +89,11 @@ class Game
             ()=>{
                 return gateTopOut.isOpen;
             },
-            new Vector2(91, -6)
+            new Vector2(91, -6),
+            () => {
+                setTimeout(() => this.addObject(new Car([...this.waypointsCarTwo], 4, 'fuel')), 2000);
+                return true;
+            },
         ];
         this.addObject(new Car([...this.waypointsCarOne], 100, 'water'));
         this.addObject(new Car([...this.waypointsCarTwo], 4, 'fuel'));
@@ -115,18 +123,11 @@ class Game
     
     update() : void
     {
-        const objectCountBefore = this.gameObjects.length;
-        
         this.gameObjects = this.gameObjects.filter(x => !x.isMarkedForDestruction);
         
         for(let gameObject of this.gameObjects)
         {
             gameObject.update();
-        }
-        
-        if(objectCountBefore !== this.gameObjects.length && this.gameObjects.length === 4)
-        {
-            setTimeout(() => this.addObject(new Car([...this.waypointsCarOne], 100, 'water')), 2000);
         }
     }
 }
