@@ -109,6 +109,18 @@ class Centrifuge extends InteractableGameObject implements Fillable
     private updateTexture() {
         const textureMap = templates[Utils.boolTo01String(this.remainingSteps[0] !== null) + Utils.boolTo01String(this.remainingSteps[1] !== null)];
         this.contentHtmlElement.innerHTML = textureMap[this.currentSpinStep % textureMap.length];
+        let currentClassMatch = this.contentHtmlElement.classList.value.match(/spin\d/)
+        if(currentClassMatch !== null)
+        {
+            this.contentHtmlElement.classList.remove(currentClassMatch.toString());
+        }
+        let lowestSpin = Math.min(Centrifuge.neededSteps, ...this.remainingSteps.filter(x => x !== null));
+        let clamp0 = Math.max(lowestSpin, 0);
+        let ratio = (clamp0 / Centrifuge.neededSteps)
+        let from1 = (1 - ratio);
+        let scaled = from1 * 3;
+        this.contentHtmlElement.classList.add('spin' + Math.floor(scaled));
+
     }
 
     destroy()
