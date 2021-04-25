@@ -16,6 +16,7 @@ import ConveyorBelt from './game-objects/conveyor-belt';
 import Orientation from './orientation';
 import SwitchableConveyorBelt from './game-objects/switchable-conveyor-belt';
 import ConveyorTunnel, { TunnelDirection } from './game-objects/conveyor-tunnel';
+import Battery from './game-objects/battery';
 
 const scoreTemplate = require('../templates/score.pug');
 const gameOverTemplate = require('../templates/game-over.pug');
@@ -144,6 +145,7 @@ class Game
         });
         
         this.addObject(new PipeNetwork(new Vector2(25, 8), new Vector2(29, 4.3), 'u', this.valves, this.vats, waterTank));
+        this.addObject(new Battery(new Vector2(84, 17)));
 
         Game.addScore(0);
     }

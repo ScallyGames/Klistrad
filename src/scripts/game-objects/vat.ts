@@ -4,6 +4,7 @@ import Fillable from '../interfaces/fillable';
 import Spillage from './spillage';
 import Utils from '../utils';
 import Game from '../game';
+import Battery from './battery';
 const template = require('../../templates/vat.pug')();
 
 
@@ -100,7 +101,7 @@ class Vat extends GameObject implements Fillable {
                 if(this.content <= 0) {
                     this.heat += this.overheatIncrement;
                 }
-                element.generate(); //increase Score here
+                Battery.battery.charge(element.generate());
                 if(element.lifetime >= element.lifetimeMax) {
                     toDelete.push(element);
                 }
