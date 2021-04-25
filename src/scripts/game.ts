@@ -17,11 +17,14 @@ import Orientation from './orientation';
 import SwitchableConveyorBelt from './game-objects/switchable-conveyor-belt';
 import ConveyorTunnel, { TunnelDirection } from './game-objects/conveyor-tunnel';
 
+const scoreTemplate = require('../templates/score.pug');
 const gameOverTemplate = require('../templates/game-over.pug');
 
 class Game
 {
     private static isGameOver : boolean = false;
+    private static score: number = 0;
+    private static scoreElement: HTMLElement;
 
     tickIntervalHandle : number;
     refreshRate : number = 5;
@@ -141,6 +144,8 @@ class Game
         });
         
         this.addObject(new PipeNetwork(new Vector2(25, 8), new Vector2(29, 4.3), 'u', this.valves, this.vats, waterTank));
+
+        Game.addScore(0);
     }
     
     addObject(obj : GameObject) : void
@@ -168,6 +173,13 @@ class Game
         {
             gameObject.lateUpdate();
         }
+    }
+
+    static addScore(score : number) : void
+    {
+        if(!Game.scoreElement) Game.scoreElement = document.getElementById('score-text');
+        Game.score += score;
+        Game.scoreElement.innerHTML = scoreTemplate({ score : Game.score });
     }
 
     static gameOver(reason : string) : void
