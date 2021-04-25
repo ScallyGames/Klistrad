@@ -17,8 +17,13 @@ import Orientation from './orientation';
 import SwitchableConveyorBelt from './game-objects/switchable-conveyor-belt';
 import ConveyorTunnel, { TunnelDirection } from './game-objects/conveyor-tunnel';
 
+const gameOverTemplate = require('../templates/game-over.pug');
+
 class Game
 {
+    private static isGameOver : boolean = false;
+
+    tickIntervalHandle : number;
     refreshRate : number = 5;
     gameObjects : GameObject[] = [];
     gameHtmlElement : HTMLElement;
@@ -32,7 +37,7 @@ class Game
     constructor()
     {
         this.gameHtmlElement = document.getElementById('game');
-        setInterval(() => this.update(), 1000 / this.refreshRate);
+        this.tickIntervalHandle = window.setInterval(() => this.update(), 1000 / this.refreshRate);
 
         this.addObject(new DebugPosition()); //delete me before release
         
@@ -147,6 +152,12 @@ class Game
     
     update() : void
     {
+        if(Game.isGameOver)
+        {
+            clearTimeout(this.tickIntervalHandle);
+            return;
+        }
+
         this.gameObjects = this.gameObjects.filter(x => !x.isMarkedForDestruction);
         
         for(let gameObject of this.gameObjects)
@@ -160,8 +171,16 @@ class Game
         }
     }
 
+    static gameOver(reason : string) : void
+    {
+        Game.sendNotification(gameOverTemplate({ reason: reason }));
+        Game.isGameOver = true;
+    }
 
-
+    static sendNotification(message : string) : void
+    {
+        document.getElementById('notification-text').innerHTML = message;
+    }
     
     private initializeConveyors(
         outputTopLeft: GameObject & Fillable, 
