@@ -8,6 +8,8 @@ import Vat from './game-objects/vat';
 import WaterTank from './game-objects/water-tank';
 import PipeNetwork from './game-objects/pipe-network';
 import PipeValve, { Pos } from './game-objects/pipe-valve';
+import Crane from './game-objects/crane';
+import Centrifuge from './game-objects/centrifuge';
 
 class Game
 {
@@ -18,6 +20,8 @@ class Game
     waypointsCarTwo : (Vector2 | ((car : Car)=>boolean)) [];
     valves : PipeValve[] = [];
     vats : Vat[] = [];
+    fuelCarArount: number = 3;
+    waterCarAmount: number = 100;
 
     constructor()
     {
@@ -25,7 +29,7 @@ class Game
         setInterval(() => this.update(), 1000 / this.refreshRate);
 
         this.addObject(new DebugPosition()); //delete me before release
-
+        
         let gateTopIn = new Gate(new Vector2(88, 4), new Vector2(-2, -1), 'i', GateDirection.Left);
         this.addObject(gateTopIn);
         let gateTopOut = new Gate(new Vector2(91, 4), new Vector2(3, -1), 'o', GateDirection.Right);
@@ -34,11 +38,19 @@ class Game
         this.addObject(gateBottomOut);
         let gateBottomIn = new Gate(new Vector2(75, 38), new Vector2(3, 1), 'l', GateDirection.Right);
         this.addObject(gateBottomIn);
-
+        
         this.addObject(new GatePost(new Vector2(90, 4)));
         this.addObject(new GatePost(new Vector2(74, 38)));
         
         let waterTank = new WaterTank(new Vector2(73, 7), new Vector2(30, 4), 'j');
+        
+        const centrifuge = new Centrifuge(new Vector2(79, 30), new Vector2(4, 0), 'c');
+        this.addObject(centrifuge);
+
+        const crane = new Crane(new Vector2(86, 30), new Vector2(1, -2), 'g', 86, 101, centrifuge);
+        crane.zIndex = 1;
+        this.addObject(crane);
+
         this.addObject(waterTank);
         this.waypointsCarOne = [
             new Vector2(89, -6),
@@ -63,7 +75,7 @@ class Game
             },
             new Vector2(73, 44),
             () => {
-                setTimeout(() => this.addObject(new Car([...this.waypointsCarOne], 100, 'water')), 2000);
+                setTimeout(() => this.addObject(new Car([...this.waypointsCarOne], this.waterCarAmount, 'water')), 2000);
                 return true;
             },
         ];
@@ -77,9 +89,8 @@ class Game
             new Vector2(116, 36),
             new Vector2(116, 31),
             new Vector2(100, 31),
-            ()=>{
-                console.log("waiting for unloading")
-                return true;
+            (car : Car)=>{
+                return crane.transfer(car);
             },
             new Vector2(100, 32),
             new Vector2(116, 32),
@@ -91,12 +102,12 @@ class Game
             },
             new Vector2(91, -6),
             () => {
-                setTimeout(() => this.addObject(new Car([...this.waypointsCarTwo], 4, 'fuel')), 2000);
+                setTimeout(() => this.addObject(new Car([...this.waypointsCarTwo], this.fuelCarArount, 'fuel')), 2000);
                 return true;
             },
         ];
-        this.addObject(new Car([...this.waypointsCarOne], 100, 'water'));
-        this.addObject(new Car([...this.waypointsCarTwo], 4, 'fuel'));
+        this.addObject(new Car([...this.waypointsCarOne], this.waterCarAmount, 'water'));
+        this.addObject(new Car([...this.waypointsCarTwo], this.fuelCarArount, 'fuel'));
         
         this.valves[0] = new PipeValve(new Vector2(25, 8), new Vector2(7, 2.3), Pos.Top, 'z');
         this.valves[1] = new PipeValve(new Vector2(25, 8), new Vector2(13, 4), Pos.Mid, 'h');

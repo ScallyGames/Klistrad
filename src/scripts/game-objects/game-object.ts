@@ -39,6 +39,19 @@ class GameObject
     protected isDirty : boolean = true;
     htmlElement : HTMLElement;
     contentHtmlElement : HTMLElement;
+    _zIndex : number = 0;
+    get zIndex() : number
+    {
+        return this._zIndex;
+    }
+    set zIndex(value : number)
+    {
+        if(value !== this._zIndex)
+        {
+            this._zIndex = this.zIndex;
+            this.htmlElement.style.zIndex = value.toString();
+        }
+    }
 
     constructor()
     {

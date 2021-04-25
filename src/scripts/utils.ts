@@ -16,6 +16,11 @@ abstract class Utils
     {
         return Math.max(...Object.keys(x).map(x => Number.parseInt(x)).filter(x => !isNaN(x)));
     }
+    
+    public static boolTo01String(x : boolean) : string
+    {
+        return (+x).toString();
+    }
 }
 
 export { Utils };
