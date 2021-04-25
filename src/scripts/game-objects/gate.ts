@@ -17,6 +17,7 @@ const templateOpen = {
 class Gate extends InteractableGameObject
 {
     static isAnyOpen = false;
+    static thisIsOpen : InteractableGameObject = null;
     inputManager = InputManager.getInstance();
 
     key: string;
@@ -52,10 +53,18 @@ class Gate extends InteractableGameObject
         this.update();
 
         this.listeners.push(new InputManagerListener("keydown", key, () => { 
-                this.isOpen = true;
-                this.update();
+                if(Gate.thisIsOpen == null) {
+                    Gate.thisIsOpen = this;
+                    this.isOpen = true;
+                    this.update();
+                } else if(Gate.thisIsOpen != this){
+                    Gate.thisIsOpen.blink();
+                }
         }));
-        this.listeners.push(new InputManagerListener("keyup", key, () => { 
+        this.listeners.push(new InputManagerListener("keyup", key, () => {
+                if(this.isOpen) {
+                    Gate.thisIsOpen = null;
+                }
                 this.isOpen = false;
                 this.update();
         }));
