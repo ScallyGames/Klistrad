@@ -35,7 +35,7 @@ class Vat extends GameObject implements Fillable {
     containerElement : HTMLElement;
     content : number = 0;
     contentMax : number = 100;
-    spillageRate : number = 1;
+    spillageRate : number = 2;
     spillageContainer : Spillage;
     rods : Rod[] = [];
     rodAmountMax : number = 4;

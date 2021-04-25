@@ -22,7 +22,7 @@ const contentTemplates = {
 
 class Spillage extends GameObject {
     content : number = 0;
-    contentMax : number = 50;
+    contentMax : number = 300;
     contentElement : HTMLElement;
 
     transfer(transferRate : number) {
