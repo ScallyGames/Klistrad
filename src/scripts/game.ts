@@ -16,6 +16,8 @@ class Game
     gameHtmlElement : HTMLElement;
     waypointsCarOne : (Vector2 | ((car : Car)=>boolean)) [];
     waypointsCarTwo : (Vector2 | ((car : Car)=>boolean)) [];
+    valves : PipeValve[] = [];
+    vats : Vat[] = [];
 
     constructor()
     {
@@ -87,20 +89,22 @@ class Game
         ];
         this.addObject(new Car([...this.waypointsCarOne], 100));
         this.addObject(new Car([...this.waypointsCarTwo], 100));
-
-        let valveTop = new PipeValve(new Vector2(25, 8), Pos.Top, 'z');
-        this.addObject(valveTop);
-        let valveMid = new PipeValve(new Vector2(25, 8), Pos.Mid, 'h');
-        this.addObject(valveMid);
-        let valveBot = new PipeValve(new Vector2(25, 8), Pos.Bot, 'n');
-        this.addObject(valveBot);
-
-        this.addObject(new Vat(new Vector2(11, 6)));
-        this.addObject(new Vat(new Vector2(11, 16)));
-        this.addObject(new Vat(new Vector2(46, 6)));
-        this.addObject(new Vat(new Vector2(46, 16)));
         
-        this.addObject(new PipeNetwork(new Vector2(25, 8), 'u'));
+        this.valves[0] = new PipeValve(new Vector2(25, 8), Pos.Top, 'z');
+        this.valves[1] = new PipeValve(new Vector2(25, 8), Pos.Mid, 'h');
+        this.valves[2] = new PipeValve(new Vector2(25, 8), Pos.Bot, 'n');
+        this.valves.forEach(element => {
+            this.addObject(element);
+        });
+        this.vats[0] = new Vat(new Vector2(11, 6));
+        this.vats[1] = new Vat(new Vector2(11, 16));
+        this.vats[2] = new Vat(new Vector2(46, 6));
+        this.vats[3] = new Vat(new Vector2(46, 16));
+        this.vats.forEach(element => {
+            this.addObject(element);
+        });
+        
+        this.addObject(new PipeNetwork(new Vector2(25, 8), 'u', this.valves, this.vats, waterTank));
     }
     
     addObject(obj : GameObject) : void

@@ -27,7 +27,7 @@ const valveTemplates = {
 
 class WaterTank extends GameObject {
     content : number;
-    contentMax : number = 1000;
+    contentMax : number = 500;
     key : string;
     inputManager = InputManager.getInstance();
     contentElement : HTMLElement;
@@ -93,8 +93,13 @@ class WaterTank extends GameObject {
     }
 
     update() {
-        let calc = Math.floor(this.content / this.contentMax * Utils.getMaxEnumValue(FillState)) as FillState;
-        this.contentElement.innerHTML = contentTemplates[calc];
+        if(this.content == 0) {
+            this.contentElement.innerHTML = contentTemplates[FillState.Empty];
+        } else if(this.content == this.contentMax) {
+            this.contentElement.innerHTML = contentTemplates[FillState.Full];
+        } else {
+            this.contentElement.innerHTML = contentTemplates[Math.floor(this.content / this.contentMax * 3) + 1 as FillState];
+        }
         super.update();
     }
 }
