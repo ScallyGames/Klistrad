@@ -8,16 +8,34 @@ const templateRight = require('../../templates/car-right.pug')();
 class Car extends GameObject
 {
     waypoints : (Vector2 | ((car : Car)=>boolean)) [];
-    content : number;
+    private _content : number;
+    get content() : number
+    {
+        return this._content;
+    }
+    set content(value : number)
+    {
+        if(this._content !== value)
+        {
+            this._content = value;
+            this.updateCargoClass();
+        }
+    }
     fillRate : number = 10;
+    cargoHtmlElement : HTMLElement;
+    cargoClass : string;
 
-    constructor(waypoints : (Vector2 | ((car : Car)=>boolean)) [], content : number)
+    constructor(waypoints : (Vector2 | ((car : Car)=>boolean)) [], content : number, cargoClass : string)
     {
         super();
+        this.contentHtmlElement.innerHTML = templateRight;
+        
         this.waypoints = waypoints;
         this.content = content;
+        this.cargoClass = cargoClass;
 
-        this.contentHtmlElement.innerHTML = templateRight;
+        this.updateCargoClass();
+
         this.pivot = new Vector2(3, 0);
         if(this.waypoints[0] instanceof Vector2) {
             this.position = this.waypoints[0];
@@ -31,26 +49,40 @@ class Car extends GameObject
 
     private moveUp() {
         this.contentHtmlElement.innerHTML = templateUp;
+        this.updateCargoClass();
         this.pivot = new Vector2(1, 1);
         this.position = new Vector2(this.position.x, this.position.y - 1);
     }
 
     private moveDown() {
         this.contentHtmlElement.innerHTML = templateDown;
+        this.updateCargoClass();
         this.pivot = new Vector2(1, 1);
         this.position = new Vector2(this.position.x, this.position.y + 1);
     }
 
     private moveRight() {
         this.contentHtmlElement.innerHTML = templateRight;
+        this.updateCargoClass();
         this.pivot = new Vector2(3, 0);
         this.position = new Vector2(this.position.x + 1, this.position.y);
     }
 
     private moveLeft() {
         this.contentHtmlElement.innerHTML = templateLeft;
+        this.updateCargoClass();
         this.pivot = new Vector2(2, 0);
         this.position = new Vector2(this.position.x - 1, this.position.y);
+    }
+
+    private updateCargoClass()
+    {
+        this.cargoHtmlElement = this.contentHtmlElement.getElementsByClassName('cargo')[0] as HTMLElement;
+        this.cargoHtmlElement.classList.add(this.cargoClass);
+        if(this.content === 0)
+        {
+            this.cargoHtmlElement.classList.add('hidden');
+        }
     }
 
     update()

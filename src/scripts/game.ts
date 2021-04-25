@@ -87,8 +87,8 @@ class Game
             },
             new Vector2(91, -6)
         ];
-        this.addObject(new Car([...this.waypointsCarOne], 100));
-        this.addObject(new Car([...this.waypointsCarTwo], 100));
+        this.addObject(new Car([...this.waypointsCarOne], 100, 'water'));
+        this.addObject(new Car([...this.waypointsCarTwo], 4, 'fuel'));
         
         this.valves[0] = new PipeValve(new Vector2(25, 8), new Vector2(7, 2.3), Pos.Top, 'z');
         this.valves[1] = new PipeValve(new Vector2(25, 8), new Vector2(13, 4), Pos.Mid, 'h');
@@ -126,7 +126,7 @@ class Game
         
         if(objectCountBefore !== this.gameObjects.length && this.gameObjects.length === 4)
         {
-            setTimeout(() => this.addObject(new Car([...this.waypointsCarOne], 100)), 2000);
+            setTimeout(() => this.addObject(new Car([...this.waypointsCarOne], 100, 'water')), 2000);
         }
     }
 }
