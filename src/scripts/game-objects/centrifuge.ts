@@ -93,7 +93,7 @@ class Centrifuge extends InteractableGameObject implements Fillable
         else
         {
             let side = (this.currentSpinStep / 4);
-            if(this.remainingSteps[side] === 0)
+            if(this.remainingSteps[side] !== null && this.remainingSteps[side] <= 0)
             {
                 if(this.target.fill())
                 {
