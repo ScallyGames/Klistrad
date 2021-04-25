@@ -1,3 +1,4 @@
+import Game from '../game';
 import Utils from '../utils';
 import Vector2 from '../vector2';
 import GameObject from './game-object';
@@ -28,7 +29,7 @@ class Spillage extends GameObject {
         this.content += transferRate;
         this.contentElement.innerHTML = contentTemplates[Math.floor(this.content / this.contentMax * Utils.getMaxEnumValue(FillState)) as FillState];
         if(this.content >= this.contentMax) {
-            //Game Over
+            Game.gameOver("The Spillage reached the Battery!");
         }
     }
 

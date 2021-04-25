@@ -58,8 +58,15 @@ class Game
         
         let waterTank = new WaterTank(new Vector2(73, 7), new Vector2(30, 4), 'j', spillage);
         
+        this.vats[0] = new Vat(new Vector2(11, 6), spillage);
+        this.vats[1] = new Vat(new Vector2(11, 16), spillage);
+        this.vats[2] = new Vat(new Vector2(46, 6), spillage);
+        this.vats[3] = new Vat(new Vector2(46, 16), spillage);
+        this.vats.forEach(element => {
+            this.addObject(element);
+        });
         
-        let conveyorInput = this.initializeConveyors(null, null, null, null);
+        let conveyorInput = this.initializeConveyors(this.vats[0], this.vats[2], this.vats[1], this.vats[3]);
 
         const centrifuge = new Centrifuge(new Vector2(79, 30), new Vector2(4, 0), 'c', conveyorInput);
         this.addObject(centrifuge);
@@ -130,14 +137,6 @@ class Game
         this.valves[1] = new PipeValve(new Vector2(25, 8), new Vector2(13, 4), Pos.Mid, 'h');
         this.valves[2] = new PipeValve(new Vector2(25, 8), new Vector2(7, 9), Pos.Bot, 'n');
         this.valves.forEach(element => {
-            this.addObject(element);
-        });
-
-        this.vats[0] = new Vat(new Vector2(11, 6), spillage);
-        this.vats[1] = new Vat(new Vector2(11, 16), spillage);
-        this.vats[2] = new Vat(new Vector2(46, 6), spillage);
-        this.vats[3] = new Vat(new Vector2(46, 16), spillage);
-        this.vats.forEach(element => {
             this.addObject(element);
         });
         
