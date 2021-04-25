@@ -43,8 +43,6 @@ class Game
         this.gameHtmlElement = document.getElementById('game');
         this.tickIntervalHandle = window.setInterval(() => this.update(), 1000 / this.refreshRate);
 
-        this.addObject(new DebugPosition()); //delete me before release
-        
         let gateTopIn = new Gate(new Vector2(88, 4), new Vector2(-2, -1), 'i', GateDirection.Left);
         this.addObject(gateTopIn);
         let gateTopOut = new Gate(new Vector2(91, 4), new Vector2(3, -1), 'o', GateDirection.Right);
