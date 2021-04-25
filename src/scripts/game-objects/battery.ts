@@ -27,7 +27,7 @@ const contentTemplates =
 class Battery extends GameObject {
     level : number = 8000;
     levelMax : number = 10000;
-    drain : number = 10;
+    drain : number = 20;
     gaugeElement : HTMLElement;
 
     static battery : Battery;

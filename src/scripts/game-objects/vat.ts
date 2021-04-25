@@ -41,7 +41,7 @@ class Vat extends GameObject implements Fillable {
     rodAmountMax : number = 4;
     heat : number = 0;
     overheatMax : number = 100;
-    overheatIncrement : number= 1;
+    overheatIncrement : number = 1;
 
     fill() : boolean {
         if(this.rods.length < this.rodAmountMax) {
@@ -59,7 +59,7 @@ class Vat extends GameObject implements Fillable {
 
     getCoolantColor() : string {
         let ratio = this.heat / this.overheatMax;
-        return "#" + (ratio * 0xFF).toString(16).padStart(2, "0") + "00" + ((1 - ratio) * 0xFF).toString(16).padStart(2, "0");
+        return "#" + Math.floor(ratio * 0xFF).toString(16).padStart(2, "0") + "00" + Math.floor((1 - ratio) * 0xFF).toString(16).padStart(2, "0");
     }
 
     constructor(position : Vector2, spillageContainer : Spillage) {
@@ -69,13 +69,11 @@ class Vat extends GameObject implements Fillable {
         this.contentHtmlElement.innerHTML = template;
         this.containerElement = this.htmlElement.getElementsByClassName('vat-container')[0] as HTMLElement;
         this.containerElement.style.fontWeight = "bold";
-        this.containerElement.style.color = "blue";
         this.rodsElement = this.htmlElement.getElementsByClassName('rods')[0] as HTMLElement;
         this.rodsElement.style.left = Utils.asCharWidth(this.position.x - this.pivot.x + 5);
         this.rodsElement.style.top = Utils.asCharHeight(this.position.y - this.pivot.y + 3);
         this.rodsElement.style.color = "green";
         this.contentElement = this.htmlElement.getElementsByClassName('content')[0] as HTMLElement;
-        this.contentElement.style.color = "blue";
         this.contentElement.innerHTML = contentTemplates[FillState.Empty];
 
         this.position = position;
@@ -83,6 +81,10 @@ class Vat extends GameObject implements Fillable {
     }
 
     update() {
+        let color = this.getCoolantColor();
+        this.containerElement.style.color = color;
+        this.contentElement.style.color = color;
+
         if(this.content == 0) {
             this.contentElement.innerHTML = contentTemplates[FillState.Empty];
         } else if(this.content == this.contentMax) {
@@ -118,9 +120,6 @@ class Vat extends GameObject implements Fillable {
         if(this.heat > this.overheatMax) {
             Game.gameOver("Your Reactor overheated!");
         }
-        let color = this.getCoolantColor();
-        this.containerElement.style.color = color;
-        this.contentElement.style.color = color;
         super.update();
     }
 }
