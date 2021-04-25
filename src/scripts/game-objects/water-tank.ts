@@ -32,6 +32,8 @@ class WaterTank extends InteractableGameObject {
     contentElement : HTMLElement;
     valveElement : HTMLElement;
 
+    static mutex : InteractableGameObject = null;
+
     _isOpen : boolean = false;
     get isOpen() : boolean
     {
@@ -66,12 +68,20 @@ class WaterTank extends InteractableGameObject {
         this.contentHtmlElement.innerHTML = template;
         
         this.key = key;
-        this.listeners.push(new InputManagerListener("keydown", key, () => { 
-            this.isOpen = true;
-            this.valveElement.innerHTML = valveTemplates[1];
-            this.update();
+        this.listeners.push(new InputManagerListener("keydown", key, () => {
+            if(WaterTank.mutex == null) {
+                WaterTank.mutex = this;
+                this.isOpen = true;
+                this.valveElement.innerHTML = valveTemplates[1];
+                this.update();
+            } else if(WaterTank.mutex != this){
+                WaterTank.mutex.blink();
+            }
         }));
-        this.listeners.push(new InputManagerListener("keyup", key, () => { 
+        this.listeners.push(new InputManagerListener("keyup", key, () => {
+            if(this.isOpen) {
+                WaterTank.mutex = null;
+            }
             this.isOpen = false;
             this.valveElement.innerHTML = valveTemplates[0];
             this.update();

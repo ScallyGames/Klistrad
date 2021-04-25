@@ -21,6 +21,24 @@ class InteractableGameObject extends GameObject
         this.htmlElement.appendChild(this.labelHtmlElement);
     }
 
+    blink() {
+        this.toggleColor("red");
+        setTimeout(() => {this.toggleColor("red")}, 300);
+        setTimeout(() => {this.toggleColor("red")}, 600);
+        setTimeout(() => {this.toggleColor("red")}, 900);
+    }
+
+    private toggleColor(col : string) {
+        if(this.labelHtmlElement.style.color == col) {
+            this.labelHtmlElement.style.color = "";
+            this.labelHtmlElement.style.borderColor = "";
+            this.labelHtmlElement.style.fontWeight = "normal";
+        } else {
+            this.labelHtmlElement.style.color = col;
+            this.labelHtmlElement.style.borderColor = col;
+            this.labelHtmlElement.style.fontWeight = "bold";
+        }
+    }
     
     update() : void
     {
