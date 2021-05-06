@@ -44,10 +44,12 @@ templates["10"] = templates["01"]
 class Centrifuge extends InteractableGameObject implements Fillable
 {
     static neededSteps = 3 * 8;
+    static fill = 2;
 
     inputManager = InputManager.getInstance();
 
     remainingSteps : number[] = [null, null];
+    remainingFill : number[] = [0, 0];
     isOn : boolean = false;
     currentSpinStep = 0;
     target : Fillable;
@@ -93,11 +95,15 @@ class Centrifuge extends InteractableGameObject implements Fillable
         else
         {
             let side = (this.currentSpinStep / 4);
-            if(this.remainingSteps[side] !== null && this.remainingSteps[side] <= 0)
+            if(this.remainingSteps[side] !== null && this.remainingSteps[side] <= 0 && this.remainingFill[side] > 0)
             {
                 if(this.target.fill())
                 {
-                    this.remainingSteps[side] = null;
+                    this.remainingFill[side]--;
+                    if(this.remainingFill[side] == 0)
+                    {
+                        this.remainingSteps[side] = null;
+                    }
                     this.updateTexture();
                 }
             }
@@ -145,6 +151,7 @@ class Centrifuge extends InteractableGameObject implements Fillable
         if(this.remainingSteps[side]) return false;
 
         this.remainingSteps[side] = Centrifuge.neededSteps;
+        this.remainingFill[side] = Centrifuge.fill;
         this.updateTexture();
         return true;
     }
