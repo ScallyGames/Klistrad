@@ -184,13 +184,19 @@ class Game
 
     static gameOver(reason : string) : void
     {
-        Game.sendNotification(gameOverTemplate({ reason: reason }));
+        Game.sendGameOverNotification(gameOverTemplate({ reason: reason }));
         Game.isGameOver = true;
     }
 
     static sendNotification(message : string) : void
     {
         document.getElementById('notification-text').innerHTML = message;
+    }
+    
+    static sendGameOverNotification(message : string) : void
+    {
+        document.getElementById('gameover-notification').classList.add('active');
+        document.getElementById('gameover-notification-text').innerHTML = message;
     }
     
     private initializeConveyors(

@@ -27,7 +27,7 @@ html, body
     font-size: 1.6em
     transform: translateX(-50%)
 
-#notifications
+#notifications, #gameover-notification
     position: absolute
     left: 50%
     top: 72px
@@ -38,6 +38,16 @@ html, body
     justify-content: center
     align-items: center
     text-align: center
+
+#gameover-notification
+    display: none
+    top: 50%
+    background-color: white
+    z-index: 10
+    border: 3px double red
+
+#gameover-notification.active
+    display: flex
 
 #score
     position: absolute
