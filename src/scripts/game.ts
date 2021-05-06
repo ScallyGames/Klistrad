@@ -132,7 +132,11 @@ class Game
                 return true;
             },
         ];
-        this.addObject(new Car([...this.waypointsCarOne], this.waterCarAmount, 'water'));
+        const waterCar1 = new Car([...this.waypointsCarOne], this.waterCarAmount, 'water');
+        waterCar1.position = waterCar1.position.plus(new Vector2(0, 2));
+        this.addObject(waterCar1);
+        const waterCar2 = new Car([...this.waypointsCarOne], this.waterCarAmount, 'water');
+        this.addObject(waterCar2);
         this.addObject(new Car([...this.waypointsCarTwo], this.fuelCarArount, 'fuel'));
         
         this.valves[0] = new PipeValve(new Vector2(25, 8), new Vector2(7, 3), Pos.Top, 'z');
@@ -192,7 +196,7 @@ class Game
     {
         document.getElementById('notification-text').innerHTML = message;
     }
-    
+
     static sendGameOverNotification(message : string) : void
     {
         document.getElementById('gameover-notification').classList.add('active');

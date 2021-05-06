@@ -7,6 +7,10 @@ const templateRight = require('../../templates/car-right.pug')();
 
 class Car extends GameObject
 {
+    static instances : Car[] = [];
+    static lookahead = [1, 2, 3, 4, 5, 6];
+
+
     waypoints : (Vector2 | ((car : Car)=>boolean)) [];
     private _content : number;
     get content() : number
@@ -24,6 +28,7 @@ class Car extends GameObject
     fillRate : number = 10;
     cargoHtmlElement : HTMLElement;
     cargoClass : string;
+    positionAfterTick : Vector2 = null;
 
     constructor(waypoints : (Vector2 | ((car : Car)=>boolean)) [], content : number, cargoClass : string)
     {
@@ -45,34 +50,64 @@ class Car extends GameObject
             this.waypoints[0](this);
         }
         this.update();
+
+        Car.instances.push(this);
     }
 
     private moveUp() {
+        let direction = new Vector2(0, -1);
+
+        if(this.isBlocked(direction)) return;
+        
         this.contentHtmlElement.innerHTML = templateUp;
         this.updateCargoClass();
         this.pivot = new Vector2(1, 1);
-        this.position = new Vector2(this.position.x, this.position.y - 1);
+        this.positionAfterTick = this.position.plus(direction);
     }
 
     private moveDown() {
+        let direction = new Vector2(0, 1);
+
+        if(this.isBlocked(direction)) return;
+        
         this.contentHtmlElement.innerHTML = templateDown;
         this.updateCargoClass();
         this.pivot = new Vector2(1, 1);
-        this.position = new Vector2(this.position.x, this.position.y + 1);
+        this.positionAfterTick = this.position.plus(direction);
     }
 
     private moveRight() {
+        let direction = new Vector2(1, 0);
+
+        if(this.isBlocked(direction)) return;
+        
         this.contentHtmlElement.innerHTML = templateRight;
         this.updateCargoClass();
         this.pivot = new Vector2(3, 0);
-        this.position = new Vector2(this.position.x + 1, this.position.y);
+        this.positionAfterTick = this.position.plus(direction);
     }
 
     private moveLeft() {
+        let direction = new Vector2(-1, 0);
+
+        if(this.isBlocked(direction)) return;
+        
         this.contentHtmlElement.innerHTML = templateLeft;
         this.updateCargoClass();
         this.pivot = new Vector2(2, 0);
-        this.position = new Vector2(this.position.x - 1, this.position.y);
+        this.positionAfterTick = this.position.plus(direction);
+    }
+    
+    private isBlocked(direction : Vector2) : boolean {
+        return Car.instances.some(car => 
+        {
+            return Car.lookahead.some(lookaheadFactor =>
+            {
+                let lookaheadVector = direction.times(lookaheadFactor);
+                let lookaheadPosition = this.position.plus(lookaheadVector);
+                return car.position.equals(lookaheadPosition);
+            });
+        });
     }
 
     private updateCargoClass()
@@ -86,7 +121,7 @@ class Car extends GameObject
     }
 
     update()
-    {   
+    {
         if(this.waypoints.length > 0)
         {
             let nextWaypoint = this.waypoints[0];
@@ -126,8 +161,18 @@ class Car extends GameObject
         super.update();
     }
 
+    lateUpdate()
+    {
+        if(this.positionAfterTick !== null)
+        {
+            this.position = this.positionAfterTick;
+        }
+        super.lateUpdate();
+    }
+
     destroy()
     {
+        Car.instances = Car.instances.filter(x => x !== this);
         super.destroy();
     }
 }
